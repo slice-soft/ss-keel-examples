@@ -1,0 +1,8 @@
+### Hello World
+GET http://localhost:7331/hello
+
+### Hello with name
+GET http://localhost:7331/hello?name=Keel
+
+### Health check
+GET http://localhost:7331/health
