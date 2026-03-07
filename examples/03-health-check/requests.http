@@ -1,0 +1,20 @@
+### Health check (all UP)
+GET http://localhost:7331/health
+
+### Simulate cache failure
+POST http://localhost:7331/demo/cache/down
+
+### Health check (cache DOWN → 503)
+GET http://localhost:7331/health
+
+### Restore cache
+POST http://localhost:7331/demo/cache/up
+
+### Simulate database failure
+POST http://localhost:7331/demo/database/down
+
+### Health check (database DOWN → 503)
+GET http://localhost:7331/health
+
+### Restore database
+POST http://localhost:7331/demo/database/up
