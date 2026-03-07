@@ -1,0 +1,5 @@
+### Job execution history
+GET http://localhost:7331/jobs/history
+
+### Health check
+GET http://localhost:7331/health
