@@ -1,0 +1,24 @@
+### Ping (check X-RateLimit-* headers)
+GET http://localhost:7331/api/ping
+
+### Get data
+GET http://localhost:7331/api/data
+
+### Exceed rate limit — run this 15 times quickly to trigger 429
+GET http://localhost:7331/api/ping
+GET http://localhost:7331/api/ping
+GET http://localhost:7331/api/ping
+GET http://localhost:7331/api/ping
+GET http://localhost:7331/api/ping
+GET http://localhost:7331/api/ping
+GET http://localhost:7331/api/ping
+GET http://localhost:7331/api/ping
+GET http://localhost:7331/api/ping
+GET http://localhost:7331/api/ping
+GET http://localhost:7331/api/ping
+
+### Check rate limiter stats
+GET http://localhost:7331/admin/ratelimit/stats
+
+### Health check
+GET http://localhost:7331/health

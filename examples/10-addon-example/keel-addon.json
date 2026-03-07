@@ -1,0 +1,15 @@
+{
+  "name": "ratelimit",
+  "version": "0.1.0",
+  "description": "Simple in-memory rate limiter addon for Keel.",
+  "register": true,
+  "repo": "github.com/example/keel-addon-ratelimit",
+  "steps": [
+    {
+      "file": "main.go",
+      "action": "append",
+      "snippet": "// Rate limiter addon — add: rl := ratelimit.New(ratelimit.Config{...})",
+      "flags": []
+    }
+  ]
+}
