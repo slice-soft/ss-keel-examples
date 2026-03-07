@@ -1,0 +1,47 @@
+### List tasks
+GET http://localhost:7331/api/v1/tasks
+
+### Create a task
+POST http://localhost:7331/api/v1/tasks
+Content-Type: application/json
+
+{
+  "title": "Buy groceries",
+  "description": "Milk, eggs, bread"
+}
+
+### Create another task
+POST http://localhost:7331/api/v1/tasks
+Content-Type: application/json
+
+{
+  "title": "Write tests"
+}
+
+### Get task by ID
+GET http://localhost:7331/api/v1/tasks/task_1
+
+### Update task (mark as done)
+PATCH http://localhost:7331/api/v1/tasks/task_1
+Content-Type: application/json
+
+{
+  "done": true
+}
+
+### Update task title
+PATCH http://localhost:7331/api/v1/tasks/task_1
+Content-Type: application/json
+
+{
+  "title": "Buy organic groceries"
+}
+
+### Delete a task
+DELETE http://localhost:7331/api/v1/tasks/task_1
+
+### Get deleted task (→ 404)
+GET http://localhost:7331/api/v1/tasks/task_1
+
+### Health check
+GET http://localhost:7331/health
