@@ -1,0 +1,24 @@
+# Shared PostgreSQL container for examples that require a database.
+# Usage: docker compose -f shared/docker/postgres.yml up -d
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: keel-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: keelexamples
+    ports:
+      - "5432:5432"
+    volumes:
+      - keel_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  keel_postgres_data:
