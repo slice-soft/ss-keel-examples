@@ -1,0 +1,41 @@
+### Login as admin
+# @name login
+POST http://localhost:7331/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@example.com",
+  "password": "password123"
+}
+
+### Login as regular user
+POST http://localhost:7331/auth/login
+Content-Type: application/json
+
+{
+  "email": "bob@example.com",
+  "password": "pass456"
+}
+
+### Invalid credentials (→ 401)
+POST http://localhost:7331/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@example.com",
+  "password": "wrong"
+}
+
+### Get current user (replace TOKEN with value from login response)
+GET http://localhost:7331/api/me
+Authorization: Bearer {{login.response.body.token}}
+
+### Access admin dashboard as alice (admin role → 200)
+GET http://localhost:7331/api/admin/dashboard
+Authorization: Bearer {{login.response.body.token}}
+
+### Access admin dashboard without token (→ 401)
+GET http://localhost:7331/api/admin/dashboard
+
+### Health check
+GET http://localhost:7331/health
