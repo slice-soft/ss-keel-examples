@@ -1,0 +1,41 @@
+### List products
+GET http://localhost:7331/api/v1/products
+
+### Create a product
+POST http://localhost:7331/api/v1/products
+Content-Type: application/json
+
+{
+  "name": "Mechanical Keyboard",
+  "description": "Cherry MX Brown switches",
+  "price": 129.99,
+  "stock": 50
+}
+
+### Create another product
+POST http://localhost:7331/api/v1/products
+Content-Type: application/json
+
+{
+  "name": "USB-C Hub",
+  "price": 39.99,
+  "stock": 200
+}
+
+### Get product by ID
+GET http://localhost:7331/api/v1/products/1
+
+### Update product price and stock
+PATCH http://localhost:7331/api/v1/products/1
+Content-Type: application/json
+
+{
+  "price": 119.99,
+  "stock": 45
+}
+
+### Delete product (soft delete)
+DELETE http://localhost:7331/api/v1/products/1
+
+### Health check (includes database status)
+GET http://localhost:7331/health
