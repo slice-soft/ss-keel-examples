@@ -1,5 +1,7 @@
-### Valid registration
-POST http://localhost:7331/users/register
+@base = http://localhost:7331
+
+### Register — valid payload (→ 200)
+POST {{base}}/users/register
 Content-Type: application/json
 
 {
@@ -9,14 +11,14 @@ Content-Type: application/json
   "age": 30
 }
 
-### Missing required fields (→ 422)
-POST http://localhost:7331/users/register
+### Register — missing required fields (→ 422)
+POST {{base}}/users/register
 Content-Type: application/json
 
 {}
 
-### Invalid email and short password (→ 422)
-POST http://localhost:7331/users/register
+### Register — invalid email and short password (→ 422)
+POST {{base}}/users/register
 Content-Type: application/json
 
 {
@@ -26,8 +28,19 @@ Content-Type: application/json
   "age": 15
 }
 
-### Valid order
-POST http://localhost:7331/orders
+### Register — underage user (→ 422)
+POST {{base}}/users/register
+Content-Type: application/json
+
+{
+  "name": "Young User",
+  "email": "young@example.com",
+  "password": "validpass1",
+  "age": 15
+}
+
+### Create order — valid payload (→ 200)
+POST {{base}}/orders
 Content-Type: application/json
 
 {
@@ -38,8 +51,8 @@ Content-Type: application/json
   ]
 }
 
-### Order with invalid item (→ 422)
-POST http://localhost:7331/orders
+### Create order — invalid item fields (→ 422)
+POST {{base}}/orders
 Content-Type: application/json
 
 {
@@ -49,11 +62,14 @@ Content-Type: application/json
   ]
 }
 
-### Empty items list (→ 422)
-POST http://localhost:7331/orders
+### Create order — empty items list (→ 422)
+POST {{base}}/orders
 Content-Type: application/json
 
 {
   "customer_id": "cust_42",
   "items": []
 }
+
+### Health check
+GET {{base}}/health

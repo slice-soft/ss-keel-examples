@@ -2,7 +2,9 @@ package main
 
 import (
 	"github.com/slice-soft/ss-keel-core/config"
+	"github.com/slice-soft/ss-keel-core/contracts"
 	"github.com/slice-soft/ss-keel-core/core"
+	"github.com/slice-soft/ss-keel-core/core/httpx"
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
@@ -33,9 +35,9 @@ func main() {
 	})
 
 	// Expose the loaded config via an endpoint (useful during development).
-	app.RegisterController(core.ControllerFunc(func() []core.Route {
-		return []core.Route{
-			core.GET("/config", func(c *core.Ctx) error {
+	app.RegisterController(contracts.ControllerFunc[httpx.Route](func() []httpx.Route {
+		return []httpx.Route{
+			httpx.GET("/config", func(c *httpx.Ctx) error {
 				return c.OK(map[string]any{
 					"service_name":  serviceName,
 					"env":           env,
@@ -47,7 +49,7 @@ func main() {
 			}).
 				Tag("config").
 				Describe("Get active configuration", "Returns the current runtime configuration.").
-				WithResponse(core.WithResponse[map[string]any](200)),
+				WithResponse(httpx.WithResponse[map[string]any](200)),
 		}
 	}))
 

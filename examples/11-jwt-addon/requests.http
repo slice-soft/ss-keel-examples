@@ -1,0 +1,64 @@
+@base = http://localhost:7331
+
+### Login as admin (alice)
+# @name loginAdmin
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@example.com",
+  "password": "password123"
+}
+
+### Login as member (bob)
+# @name loginMember
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "bob@example.com",
+  "password": "pass456"
+}
+
+### Invalid credentials (→ 401)
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@example.com",
+  "password": "wrong-password"
+}
+
+### Refresh token — get a new token with reset expiry
+# @name refreshed
+POST {{base}}/auth/refresh
+Content-Type: application/json
+
+{
+  "token": "{{loginAdmin.response.body.token}}"
+}
+
+### Get current user — uses token from loginAdmin
+GET {{base}}/api/me
+Authorization: Bearer {{loginAdmin.response.body.token}}
+
+### Admin area — alice has role=admin (→ 200)
+GET {{base}}/api/admin
+Authorization: Bearer {{loginAdmin.response.body.token}}
+
+### Admin area — bob has role=member (→ 403)
+GET {{base}}/api/admin
+Authorization: Bearer {{loginMember.response.body.token}}
+
+### Admin area — no token (→ 401)
+GET {{base}}/api/admin
+
+### Get current user with refreshed token
+GET {{base}}/api/me
+Authorization: Bearer {{refreshed.response.body.token}}
+
+### Health check
+GET {{base}}/health
+
+### OpenAPI docs (browser)
+GET {{base}}/docs

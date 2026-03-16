@@ -6,7 +6,9 @@ import (
 	"addon-example/internal/addon/ratelimit"
 
 	"github.com/slice-soft/ss-keel-core/config"
+	"github.com/slice-soft/ss-keel-core/contracts"
 	"github.com/slice-soft/ss-keel-core/core"
+	"github.com/slice-soft/ss-keel-core/core/httpx"
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
@@ -49,9 +51,9 @@ func main() {
 
 	// Apply the rate limiter globally via a route group.
 	api := app.Group("/api", rl.Middleware())
-	api.RegisterController(core.ControllerFunc(func() []core.Route {
-		return []core.Route{
-			core.GET("/ping", func(c *core.Ctx) error {
+	api.RegisterController(contracts.ControllerFunc[httpx.Route](func() []httpx.Route {
+		return []httpx.Route{
+			httpx.GET("/ping", func(c *httpx.Ctx) error {
 				return c.OK(map[string]string{
 					"message": "pong",
 					"note":    "check X-RateLimit-* headers in the response",
@@ -59,9 +61,9 @@ func main() {
 			}).
 				Tag("demo").
 				Describe("Ping", "Rate-limited endpoint. Check X-RateLimit-Remaining header.").
-				WithResponse(core.WithResponse[map[string]string](200)),
+				WithResponse(httpx.WithResponse[map[string]string](200)),
 
-			core.GET("/data", func(c *core.Ctx) error {
+			httpx.GET("/data", func(c *httpx.Ctx) error {
 				return c.OK(map[string]any{
 					"items": []string{"alpha", "beta", "gamma"},
 					"total": 3,
@@ -69,14 +71,14 @@ func main() {
 			}).
 				Tag("demo").
 				Describe("Get data", "Returns sample data. Subject to rate limiting.").
-				WithResponse(core.WithResponse[map[string]any](200)),
+				WithResponse(httpx.WithResponse[map[string]any](200)),
 		}
 	}))
 
 	// Admin endpoint to inspect rate limiter stats (not rate-limited itself).
-	app.RegisterController(core.ControllerFunc(func() []core.Route {
-		return []core.Route{
-			core.GET("/admin/ratelimit/stats", func(c *core.Ctx) error {
+	app.RegisterController(contracts.ControllerFunc[httpx.Route](func() []httpx.Route {
+		return []httpx.Route{
+			httpx.GET("/admin/ratelimit/stats", func(c *httpx.Ctx) error {
 				return c.OK(map[string]any{
 					"config": map[string]any{
 						"max":    rateLimitMax,
@@ -87,7 +89,7 @@ func main() {
 			}).
 				Tag("admin").
 				Describe("Rate limiter stats", "Shows current request counts per IP.").
-				WithResponse(core.WithResponse[map[string]any](200)),
+				WithResponse(httpx.WithResponse[map[string]any](200)),
 		}
 	}))
 

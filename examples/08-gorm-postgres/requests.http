@@ -1,8 +1,14 @@
-### List products
-GET http://localhost:7331/api/v1/products
+@base = http://localhost:7331
+
+### List products (paginated — default page=1 limit=20)
+GET {{base}}/api/v1/products
+
+### List products — page 2
+GET {{base}}/api/v1/products?page=2&limit=5
 
 ### Create a product
-POST http://localhost:7331/api/v1/products
+# @name createProduct
+POST {{base}}/api/v1/products
 Content-Type: application/json
 
 {
@@ -13,7 +19,7 @@ Content-Type: application/json
 }
 
 ### Create another product
-POST http://localhost:7331/api/v1/products
+POST {{base}}/api/v1/products
 Content-Type: application/json
 
 {
@@ -23,10 +29,10 @@ Content-Type: application/json
 }
 
 ### Get product by ID
-GET http://localhost:7331/api/v1/products/1
+GET {{base}}/api/v1/products/1
 
-### Update product price and stock
-PATCH http://localhost:7331/api/v1/products/1
+### Update product — change price and stock
+PATCH {{base}}/api/v1/products/1
 Content-Type: application/json
 
 {
@@ -34,8 +40,14 @@ Content-Type: application/json
   "stock": 45
 }
 
-### Delete product (soft delete)
-DELETE http://localhost:7331/api/v1/products/1
+### Delete product (soft delete — sets deleted_at)
+DELETE {{base}}/api/v1/products/1
 
-### Health check (includes database status)
-GET http://localhost:7331/health
+### Get deleted product (→ 404 after soft delete)
+GET {{base}}/api/v1/products/1
+
+### Health check (includes PostgreSQL status)
+GET {{base}}/health
+
+### OpenAPI docs (browser — requires running server)
+GET {{base}}/docs

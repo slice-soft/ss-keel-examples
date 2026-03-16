@@ -4,7 +4,9 @@ import (
 	"time"
 
 	"github.com/slice-soft/ss-keel-core/config"
+	"github.com/slice-soft/ss-keel-core/contracts"
 	"github.com/slice-soft/ss-keel-core/core"
+	"github.com/slice-soft/ss-keel-core/core/httpx"
 	"github.com/slice-soft/ss-keel-core/logger"
 	"github.com/slice-soft/ss-keel-gorm/database"
 	"gorm.io/gorm"
@@ -90,10 +92,10 @@ func main() {
 	app.RegisterHealthChecker(database.NewHealthChecker(dbInstance))
 
 	v1 := app.Group("/api/v1")
-	v1.RegisterController(core.ControllerFunc(func() []core.Route {
-		return []core.Route{
+	v1.RegisterController(contracts.ControllerFunc[httpx.Route](func() []httpx.Route {
+		return []httpx.Route{
 			// List products
-			core.GET("/products", func(c *core.Ctx) error {
+			httpx.GET("/products", func(c *httpx.Ctx) error {
 				var products []Product
 				if err := db.Find(&products).Error; err != nil {
 					return core.Internal("could not fetch products", err)
@@ -105,10 +107,10 @@ func main() {
 			}).
 				Tag("products").
 				Describe("List products").
-				WithResponse(core.WithResponse[map[string]any](200)),
+				WithResponse(httpx.WithResponse[map[string]any](200)),
 
 			// Get product by ID
-			core.GET("/products/:id", func(c *core.Ctx) error {
+			httpx.GET("/products/:id", func(c *httpx.Ctx) error {
 				var product Product
 				if err := db.First(&product, c.Params("id")).Error; err != nil {
 					return core.NotFound("product not found")
@@ -117,10 +119,10 @@ func main() {
 			}).
 				Tag("products").
 				Describe("Get product by ID").
-				WithResponse(core.WithResponse[Product](200)),
+				WithResponse(httpx.WithResponse[Product](200)),
 
 			// Create product
-			core.POST("/products", func(c *core.Ctx) error {
+			httpx.POST("/products", func(c *httpx.Ctx) error {
 				var req CreateProductRequest
 				if err := c.ParseBody(&req); err != nil {
 					return err
@@ -138,11 +140,11 @@ func main() {
 			}).
 				Tag("products").
 				Describe("Create product").
-				WithBody(core.WithBody[CreateProductRequest]()).
-				WithResponse(core.WithResponse[Product](201)),
+				WithBody(httpx.WithBody[CreateProductRequest]()).
+				WithResponse(httpx.WithResponse[Product](201)),
 
 			// Update product
-			core.PATCH("/products/:id", func(c *core.Ctx) error {
+			httpx.PATCH("/products/:id", func(c *httpx.Ctx) error {
 				var product Product
 				if err := db.First(&product, c.Params("id")).Error; err != nil {
 					return core.NotFound("product not found")
@@ -171,11 +173,11 @@ func main() {
 			}).
 				Tag("products").
 				Describe("Update product").
-				WithBody(core.WithBody[UpdateProductRequest]()).
-				WithResponse(core.WithResponse[Product](200)),
+				WithBody(httpx.WithBody[UpdateProductRequest]()).
+				WithResponse(httpx.WithResponse[Product](200)),
 
 			// Delete product (soft delete via GORM's DeletedAt)
-			core.DELETE("/products/:id", func(c *core.Ctx) error {
+			httpx.DELETE("/products/:id", func(c *httpx.Ctx) error {
 				var product Product
 				if err := db.First(&product, c.Params("id")).Error; err != nil {
 					return core.NotFound("product not found")

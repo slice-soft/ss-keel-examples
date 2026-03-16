@@ -1,0 +1,67 @@
+@base = http://localhost:7331
+
+### List notes (paginated — default page=1 limit=20)
+GET {{base}}/api/v1/notes
+
+### List notes — page 2 with smaller page size
+GET {{base}}/api/v1/notes?page=1&limit=5
+
+### Create a note
+# @name createNote
+POST {{base}}/api/v1/notes
+Content-Type: application/json
+
+{
+  "title": "Meeting notes",
+  "body": "Discuss roadmap and sprint goals for Q2."
+}
+
+### Create another note
+# @name createNote2
+POST {{base}}/api/v1/notes
+Content-Type: application/json
+
+{
+  "title": "Shopping list",
+  "body": "Milk, eggs, bread, coffee."
+}
+
+### Get note by ID (use an ID from the create response above)
+GET {{base}}/api/v1/notes/{{createNote.response.body.id}}
+
+### Update note — change title only
+PATCH {{base}}/api/v1/notes/{{createNote.response.body.id}}
+Content-Type: application/json
+
+{
+  "title": "Q2 Planning Notes"
+}
+
+### Update note — change body only
+PATCH {{base}}/api/v1/notes/{{createNote.response.body.id}}
+Content-Type: application/json
+
+{
+  "body": "Updated: Roadmap finalized. Sprint 1 starts Monday."
+}
+
+### Create note — validation errors (→ 422)
+POST {{base}}/api/v1/notes
+Content-Type: application/json
+
+{
+  "title": "X",
+  "body": ""
+}
+
+### Delete note
+DELETE {{base}}/api/v1/notes/{{createNote2.response.body.id}}
+
+### Get deleted note (→ 404)
+GET {{base}}/api/v1/notes/{{createNote2.response.body.id}}
+
+### Health check (includes MongoDB status)
+GET {{base}}/health
+
+### OpenAPI docs (browser)
+GET {{base}}/docs

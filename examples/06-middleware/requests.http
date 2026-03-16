@@ -1,16 +1,21 @@
-### Ping — check X-Correlation-ID and X-Response-Time headers in response
-GET http://localhost:7331/api/ping
+@base = http://localhost:7331
 
-### Ping with custom correlation ID
-GET http://localhost:7331/api/ping
+### Ping — observe X-Correlation-ID and X-Response-Time in response headers
+GET {{base}}/api/ping
+
+### Ping with custom correlation ID (forwarded back in response)
+GET {{base}}/api/ping
 X-Correlation-ID: my-trace-123
 
-### Internal endpoint — missing key (→ 401)
-GET http://localhost:7331/api/internal
+### Internal endpoint — no key (→ 401)
+GET {{base}}/api/internal
 
 ### Internal endpoint — with key (→ 200)
-GET http://localhost:7331/api/internal
+GET {{base}}/api/internal
 X-Internal-Key: dev-internal-key
 
 ### Health check
-GET http://localhost:7331/health
+GET {{base}}/health
+
+### OpenAPI docs (browser)
+GET {{base}}/docs

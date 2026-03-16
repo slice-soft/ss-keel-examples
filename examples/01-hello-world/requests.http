@@ -1,8 +1,13 @@
-### Hello World
-GET http://localhost:7331/hello
+@base = http://localhost:7331
 
-### Hello with name
-GET http://localhost:7331/hello?name=Keel
+### Hello World
+GET {{base}}/hello
+
+### Hello with custom name
+GET {{base}}/hello?name=Keel
 
 ### Health check
-GET http://localhost:7331/health
+GET {{base}}/health
+
+### OpenAPI docs (browser)
+GET {{base}}/docs
