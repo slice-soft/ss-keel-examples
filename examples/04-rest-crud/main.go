@@ -6,7 +6,9 @@ import (
 	"time"
 
 	"github.com/slice-soft/ss-keel-core/config"
+	"github.com/slice-soft/ss-keel-core/contracts"
 	"github.com/slice-soft/ss-keel-core/core"
+	"github.com/slice-soft/ss-keel-core/core/httpx"
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
@@ -135,10 +137,10 @@ func main() {
 	})
 
 	v1 := app.Group("/api/v1")
-	v1.RegisterController(core.ControllerFunc(func() []core.Route {
-		return []core.Route{
+	v1.RegisterController(contracts.ControllerFunc[httpx.Route](func() []httpx.Route {
+		return []httpx.Route{
 			// List all tasks
-			core.GET("/tasks", func(c *core.Ctx) error {
+			httpx.GET("/tasks", func(c *httpx.Ctx) error {
 				tasks := db.List()
 				return c.OK(map[string]any{
 					"data":  tasks,
@@ -147,10 +149,10 @@ func main() {
 			}).
 				Tag("tasks").
 				Describe("List tasks").
-				WithResponse(core.WithResponse[map[string]any](200)),
+				WithResponse(httpx.WithResponse[map[string]any](200)),
 
 			// Get a single task
-			core.GET("/tasks/:id", func(c *core.Ctx) error {
+			httpx.GET("/tasks/:id", func(c *httpx.Ctx) error {
 				task, ok := db.Get(c.Params("id"))
 				if !ok {
 					return core.NotFound("task not found")
@@ -159,10 +161,10 @@ func main() {
 			}).
 				Tag("tasks").
 				Describe("Get task by ID").
-				WithResponse(core.WithResponse[Task](200)),
+				WithResponse(httpx.WithResponse[Task](200)),
 
 			// Create a task
-			core.POST("/tasks", func(c *core.Ctx) error {
+			httpx.POST("/tasks", func(c *httpx.Ctx) error {
 				var req CreateTaskRequest
 				if err := c.ParseBody(&req); err != nil {
 					return err
@@ -172,11 +174,11 @@ func main() {
 			}).
 				Tag("tasks").
 				Describe("Create a task").
-				WithBody(core.WithBody[CreateTaskRequest]()).
-				WithResponse(core.WithResponse[Task](201)),
+				WithBody(httpx.WithBody[CreateTaskRequest]()).
+				WithResponse(httpx.WithResponse[Task](201)),
 
 			// Update a task
-			core.PATCH("/tasks/:id", func(c *core.Ctx) error {
+			httpx.PATCH("/tasks/:id", func(c *httpx.Ctx) error {
 				var req UpdateTaskRequest
 				if err := c.ParseBody(&req); err != nil {
 					return err
@@ -189,11 +191,11 @@ func main() {
 			}).
 				Tag("tasks").
 				Describe("Update a task").
-				WithBody(core.WithBody[UpdateTaskRequest]()).
-				WithResponse(core.WithResponse[Task](200)),
+				WithBody(httpx.WithBody[UpdateTaskRequest]()).
+				WithResponse(httpx.WithResponse[Task](200)),
 
 			// Delete a task
-			core.DELETE("/tasks/:id", func(c *core.Ctx) error {
+			httpx.DELETE("/tasks/:id", func(c *httpx.Ctx) error {
 				if !db.Delete(c.Params("id")) {
 					return core.NotFound("task not found")
 				}

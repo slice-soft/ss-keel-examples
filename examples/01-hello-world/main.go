@@ -2,7 +2,9 @@ package main
 
 import (
 	"github.com/slice-soft/ss-keel-core/config"
+	"github.com/slice-soft/ss-keel-core/contracts"
 	"github.com/slice-soft/ss-keel-core/core"
+	"github.com/slice-soft/ss-keel-core/core/httpx"
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
@@ -27,9 +29,9 @@ func main() {
 		},
 	})
 
-	app.RegisterController(core.ControllerFunc(func() []core.Route {
-		return []core.Route{
-			core.GET("/hello", func(c *core.Ctx) error {
+	app.RegisterController(contracts.ControllerFunc[httpx.Route](func() []httpx.Route {
+		return []httpx.Route{
+			httpx.GET("/hello", func(c *httpx.Ctx) error {
 				name := c.Query("name")
 				if name == "" {
 					name = "world"
@@ -41,7 +43,7 @@ func main() {
 				Tag("hello").
 				Describe("Say hello", "Returns a greeting message.").
 				WithQueryParam("name", "string", false, "Name to greet").
-				WithResponse(core.WithResponse[map[string]string](200)),
+				WithResponse(httpx.WithResponse[map[string]string](200)),
 		}
 	}))
 

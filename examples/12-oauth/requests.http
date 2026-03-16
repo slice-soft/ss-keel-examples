@@ -1,0 +1,42 @@
+@base = http://localhost:7331
+
+# OAuth flows require a browser — open these URLs directly.
+# After a successful callback the server returns a JWT in the response body.
+# Copy that token and paste it as @token below.
+
+@token = <paste-jwt-from-oauth-callback-here>
+
+### Start GitHub OAuth flow (open in browser)
+GET {{base}}/auth/github
+
+### Start Google OAuth flow (open in browser)
+GET {{base}}/auth/google
+
+# After the OAuth flow completes, the callback returns:
+#   { "token": "eyJ...", "token_type": "Bearer" }
+# Paste the token value above as @token, then use the requests below.
+
+### Verify token — inspect decoded claims
+POST {{base}}/auth/verify
+Content-Type: application/json
+
+{
+  "token": "{{token}}"
+}
+
+### Get current user — returns subject and data claim
+GET {{base}}/api/me
+Authorization: Bearer {{token}}
+
+### Provider debug — returns provider, name, avatar_url
+GET {{base}}/api/debug/provider
+Authorization: Bearer {{token}}
+
+### Protected endpoint — no token (→ 401)
+GET {{base}}/api/me
+
+### Health check
+GET {{base}}/health
+
+### OpenAPI docs (browser)
+GET {{base}}/docs

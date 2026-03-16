@@ -2,7 +2,7 @@ module rest-crud
 
 go 1.25
 
-require github.com/slice-soft/ss-keel-core v0.2.1
+require github.com/slice-soft/ss-keel-core v0.7.0
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect

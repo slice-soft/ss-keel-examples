@@ -1,5 +1,10 @@
-### Job execution history
-GET http://localhost:7331/jobs/history
+@base = http://localhost:7331
+
+### Job execution history (poll this while the server runs to see cron entries)
+GET {{base}}/jobs/history
 
 ### Health check
-GET http://localhost:7331/health
+GET {{base}}/health
+
+### OpenAPI docs (browser)
+GET {{base}}/docs

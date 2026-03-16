@@ -6,12 +6,14 @@ import (
 	"sync/atomic"
 
 	"github.com/slice-soft/ss-keel-core/config"
+	"github.com/slice-soft/ss-keel-core/contracts"
 	"github.com/slice-soft/ss-keel-core/core"
+	"github.com/slice-soft/ss-keel-core/core/httpx"
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
 // CacheChecker verifies that the in-memory cache is responding.
-// Implements core.HealthChecker.
+// Implements contracts.HealthChecker.
 type CacheChecker struct {
 	ready atomic.Bool
 }
@@ -32,7 +34,7 @@ func (c *CacheChecker) Check(_ context.Context) error {
 }
 
 // DatabaseChecker simulates a database ping.
-// Implements core.HealthChecker.
+// Implements contracts.HealthChecker.
 type DatabaseChecker struct {
 	connected atomic.Bool
 }
@@ -82,24 +84,24 @@ func main() {
 	app.RegisterHealthChecker(db)
 
 	// Control endpoints to toggle dependency health (for demo purposes).
-	app.RegisterController(core.ControllerFunc(func() []core.Route {
-		return []core.Route{
-			core.POST("/demo/cache/down", func(c *core.Ctx) error {
+	app.RegisterController(contracts.ControllerFunc[httpx.Route](func() []httpx.Route {
+		return []httpx.Route{
+			httpx.POST("/demo/cache/down", func(c *httpx.Ctx) error {
 				cache.ready.Store(false)
 				return c.OK(map[string]string{"cache": "marked as DOWN"})
 			}).Tag("demo").Describe("Mark cache as DOWN"),
 
-			core.POST("/demo/cache/up", func(c *core.Ctx) error {
+			httpx.POST("/demo/cache/up", func(c *httpx.Ctx) error {
 				cache.ready.Store(true)
 				return c.OK(map[string]string{"cache": "marked as UP"})
 			}).Tag("demo").Describe("Mark cache as UP"),
 
-			core.POST("/demo/database/down", func(c *core.Ctx) error {
+			httpx.POST("/demo/database/down", func(c *httpx.Ctx) error {
 				db.connected.Store(false)
 				return c.OK(map[string]string{"database": "marked as DOWN"})
 			}).Tag("demo").Describe("Mark database as DOWN"),
 
-			core.POST("/demo/database/up", func(c *core.Ctx) error {
+			httpx.POST("/demo/database/up", func(c *httpx.Ctx) error {
 				db.connected.Store(true)
 				return c.OK(map[string]string{"database": "marked as UP"})
 			}).Tag("demo").Describe("Mark database as UP"),

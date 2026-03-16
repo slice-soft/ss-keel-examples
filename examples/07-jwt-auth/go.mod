@@ -1,11 +1,11 @@
 module jwt-auth
 
-go 1.25
+go 1.25.0
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.0
-	github.com/golang-jwt/jwt/v5 v5.2.1
-	github.com/slice-soft/ss-keel-core v0.2.1
+	github.com/slice-soft/ss-keel-core v0.7.0
+	github.com/slice-soft/ss-keel-jwt v1.2.0
 )
 
 require (
@@ -14,6 +14,7 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.16.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect

@@ -1,6 +1,8 @@
-### Login as admin
-# @name login
-POST http://localhost:7331/auth/login
+@base = http://localhost:7331
+
+### Login as admin (alice)
+# @name loginAdmin
+POST {{base}}/auth/login
 Content-Type: application/json
 
 {
@@ -8,8 +10,9 @@ Content-Type: application/json
   "password": "password123"
 }
 
-### Login as regular user
-POST http://localhost:7331/auth/login
+### Login as regular user (bob)
+# @name loginUser
+POST {{base}}/auth/login
 Content-Type: application/json
 
 {
@@ -18,7 +21,7 @@ Content-Type: application/json
 }
 
 ### Invalid credentials (→ 401)
-POST http://localhost:7331/auth/login
+POST {{base}}/auth/login
 Content-Type: application/json
 
 {
@@ -26,16 +29,23 @@ Content-Type: application/json
   "password": "wrong"
 }
 
-### Get current user (replace TOKEN with value from login response)
-GET http://localhost:7331/api/me
-Authorization: Bearer {{login.response.body.token}}
+### Get current user — uses token from loginAdmin response
+GET {{base}}/api/me
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
-### Access admin dashboard as alice (admin role → 200)
-GET http://localhost:7331/api/admin/dashboard
-Authorization: Bearer {{login.response.body.token}}
+### Access admin dashboard — admin role (→ 200)
+GET {{base}}/api/admin/dashboard
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
-### Access admin dashboard without token (→ 401)
-GET http://localhost:7331/api/admin/dashboard
+### Access admin dashboard — non-admin (bob → 403)
+GET {{base}}/api/admin/dashboard
+Authorization: Bearer {{loginUser.response.body.token}}
+
+### Access admin dashboard — no token (→ 401)
+GET {{base}}/api/admin/dashboard
 
 ### Health check
-GET http://localhost:7331/health
+GET {{base}}/health
+
+### OpenAPI docs (browser)
+GET {{base}}/docs

@@ -1,5 +1,10 @@
+@base = http://localhost:7331
+
 ### Get active configuration
-GET http://localhost:7331/config
+GET {{base}}/config
 
 ### Health check
-GET http://localhost:7331/health
+GET {{base}}/health
+
+### OpenAPI docs (browser)
+GET {{base}}/docs

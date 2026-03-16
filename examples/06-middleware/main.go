@@ -7,7 +7,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/slice-soft/ss-keel-core/config"
+	"github.com/slice-soft/ss-keel-core/contracts"
 	"github.com/slice-soft/ss-keel-core/core"
+	"github.com/slice-soft/ss-keel-core/core/httpx"
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
@@ -101,9 +103,9 @@ func main() {
 		IPBlocklist(blockedIPs...),
 	)
 
-	api.RegisterController(core.ControllerFunc(func() []core.Route {
-		return []core.Route{
-			core.GET("/ping", func(c *core.Ctx) error {
+	api.RegisterController(contracts.ControllerFunc[httpx.Route](func() []httpx.Route {
+		return []httpx.Route{
+			httpx.GET("/ping", func(c *httpx.Ctx) error {
 				correlationID, _ := c.Locals("correlation_id").(string)
 				return c.OK(map[string]string{
 					"message":        "pong",
@@ -112,10 +114,10 @@ func main() {
 			}).
 				Tag("demo").
 				Describe("Ping", "Check response headers for X-Correlation-ID and X-Response-Time.").
-				WithResponse(core.WithResponse[map[string]string](200)),
+				WithResponse(httpx.WithResponse[map[string]string](200)),
 
 			// Route-level middleware: only this route requires the X-Internal-Key header.
-			core.GET("/internal", func(c *core.Ctx) error {
+			httpx.GET("/internal", func(c *httpx.Ctx) error {
 				return c.OK(map[string]string{
 					"message": "welcome to the internal endpoint",
 				})
@@ -123,7 +125,7 @@ func main() {
 				Tag("demo").
 				Describe("Internal endpoint", "Protected by a route-level middleware.").
 				Use(requireInternalKey(internalKey)).
-				WithResponse(core.WithResponse[map[string]string](200)),
+				WithResponse(httpx.WithResponse[map[string]string](200)),
 		}
 	}))
 

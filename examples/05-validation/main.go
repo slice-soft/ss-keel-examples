@@ -2,7 +2,9 @@ package main
 
 import (
 	"github.com/slice-soft/ss-keel-core/config"
+	"github.com/slice-soft/ss-keel-core/contracts"
 	"github.com/slice-soft/ss-keel-core/core"
+	"github.com/slice-soft/ss-keel-core/core/httpx"
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
@@ -59,10 +61,10 @@ func main() {
 		},
 	})
 
-	app.RegisterController(core.ControllerFunc(func() []core.Route {
-		return []core.Route{
+	app.RegisterController(contracts.ControllerFunc[httpx.Route](func() []httpx.Route {
+		return []httpx.Route{
 			// Registration — shows field-level validation errors on 422.
-			core.POST("/users/register", func(c *core.Ctx) error {
+			httpx.POST("/users/register", func(c *httpx.Ctx) error {
 				var req RegisterRequest
 				// ParseBody returns 400 for malformed JSON, 422 for validation errors.
 				if err := c.ParseBody(&req); err != nil {
@@ -76,11 +78,11 @@ func main() {
 			}).
 				Tag("users").
 				Describe("Register a user", "Returns 422 with per-field errors on invalid input.").
-				WithBody(core.WithBody[RegisterRequest]()).
-				WithResponse(core.WithResponse[RegisterResponse](201)),
+				WithBody(httpx.WithBody[RegisterRequest]()).
+				WithResponse(httpx.WithResponse[RegisterResponse](201)),
 
 			// Order — shows nested struct and slice validation.
-			core.POST("/orders", func(c *core.Ctx) error {
+			httpx.POST("/orders", func(c *httpx.Ctx) error {
 				var req OrderRequest
 				if err := c.ParseBody(&req); err != nil {
 					return err
@@ -98,8 +100,8 @@ func main() {
 			}).
 				Tag("orders").
 				Describe("Place an order", "Validates nested items slice with `dive`.").
-				WithBody(core.WithBody[OrderRequest]()).
-				WithResponse(core.WithResponse[map[string]any](201)),
+				WithBody(httpx.WithBody[OrderRequest]()).
+				WithResponse(httpx.WithResponse[map[string]any](201)),
 		}
 	}))
 

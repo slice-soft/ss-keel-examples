@@ -1,24 +1,50 @@
-### Ping (check X-RateLimit-* headers)
-GET http://localhost:7331/api/ping
+@base = http://localhost:7331
+
+### Ping — observe X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset headers
+GET {{base}}/api/ping
 
 ### Get data
-GET http://localhost:7331/api/data
+GET {{base}}/api/data
 
-### Exceed rate limit — run this 15 times quickly to trigger 429
-GET http://localhost:7331/api/ping
-GET http://localhost:7331/api/ping
-GET http://localhost:7331/api/ping
-GET http://localhost:7331/api/ping
-GET http://localhost:7331/api/ping
-GET http://localhost:7331/api/ping
-GET http://localhost:7331/api/ping
-GET http://localhost:7331/api/ping
-GET http://localhost:7331/api/ping
-GET http://localhost:7331/api/ping
-GET http://localhost:7331/api/ping
+### Trigger rate limit — send repeatedly until 429
+### (limit is 10 req/min by default; run this block multiple times)
+GET {{base}}/api/ping
 
-### Check rate limiter stats
-GET http://localhost:7331/admin/ratelimit/stats
+###
+GET {{base}}/api/ping
+
+###
+GET {{base}}/api/ping
+
+###
+GET {{base}}/api/ping
+
+###
+GET {{base}}/api/ping
+
+###
+GET {{base}}/api/ping
+
+###
+GET {{base}}/api/ping
+
+###
+GET {{base}}/api/ping
+
+###
+GET {{base}}/api/ping
+
+###
+GET {{base}}/api/ping
+
+###
+GET {{base}}/api/ping
+
+### Check rate limiter stats (admin)
+GET {{base}}/admin/ratelimit/stats
 
 ### Health check
-GET http://localhost:7331/health
+GET {{base}}/health
+
+### OpenAPI docs (browser)
+GET {{base}}/docs

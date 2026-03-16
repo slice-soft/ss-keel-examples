@@ -1,8 +1,11 @@
-### List tasks
-GET http://localhost:7331/api/v1/tasks
+@base = http://localhost:7331
+
+### List tasks (empty on first run)
+GET {{base}}/api/v1/tasks
 
 ### Create a task
-POST http://localhost:7331/api/v1/tasks
+# @name createTask
+POST {{base}}/api/v1/tasks
 Content-Type: application/json
 
 {
@@ -11,26 +14,29 @@ Content-Type: application/json
 }
 
 ### Create another task
-POST http://localhost:7331/api/v1/tasks
+POST {{base}}/api/v1/tasks
 Content-Type: application/json
 
 {
   "title": "Write tests"
 }
 
-### Get task by ID
-GET http://localhost:7331/api/v1/tasks/task_1
+### List all tasks
+GET {{base}}/api/v1/tasks
 
-### Update task (mark as done)
-PATCH http://localhost:7331/api/v1/tasks/task_1
+### Get task by ID (use an ID from the list above)
+GET {{base}}/api/v1/tasks/task_1
+
+### Update task — mark as done
+PATCH {{base}}/api/v1/tasks/task_1
 Content-Type: application/json
 
 {
   "done": true
 }
 
-### Update task title
-PATCH http://localhost:7331/api/v1/tasks/task_1
+### Update task — change title
+PATCH {{base}}/api/v1/tasks/task_1
 Content-Type: application/json
 
 {
@@ -38,10 +44,13 @@ Content-Type: application/json
 }
 
 ### Delete a task
-DELETE http://localhost:7331/api/v1/tasks/task_1
+DELETE {{base}}/api/v1/tasks/task_1
 
 ### Get deleted task (→ 404)
-GET http://localhost:7331/api/v1/tasks/task_1
+GET {{base}}/api/v1/tasks/task_1
 
 ### Health check
-GET http://localhost:7331/health
+GET {{base}}/health
+
+### OpenAPI docs (browser)
+GET {{base}}/docs

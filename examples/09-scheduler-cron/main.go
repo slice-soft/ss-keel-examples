@@ -7,7 +7,9 @@ import (
 	"time"
 
 	"github.com/slice-soft/ss-keel-core/config"
+	"github.com/slice-soft/ss-keel-core/contracts"
 	"github.com/slice-soft/ss-keel-core/core"
+	"github.com/slice-soft/ss-keel-core/core/httpx"
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
@@ -47,11 +49,11 @@ func (h *History) All() []JobRecord {
 	return out
 }
 
-// IntervalScheduler is a simple interval-based scheduler that implements core.Scheduler.
+// IntervalScheduler is a simple interval-based scheduler that implements contracts.Scheduler.
 // Schedules are specified as Go duration strings (e.g. "10s", "1m").
 type IntervalScheduler struct {
 	mu     sync.Mutex
-	jobs   []core.Job
+	jobs   []contracts.Job
 	cancel context.CancelFunc
 	wg     sync.WaitGroup
 	log    *logger.Logger
@@ -62,7 +64,7 @@ func NewIntervalScheduler(log *logger.Logger) *IntervalScheduler {
 }
 
 // Add registers a job. Schedule must be a valid Go duration string (e.g. "10s").
-func (s *IntervalScheduler) Add(job core.Job) error {
+func (s *IntervalScheduler) Add(job contracts.Job) error {
 	if _, err := time.ParseDuration(job.Schedule); err != nil {
 		return fmt.Errorf("invalid schedule %q: must be a Go duration string (e.g. 10s, 1m)", job.Schedule)
 	}
@@ -79,7 +81,7 @@ func (s *IntervalScheduler) Start() {
 	s.cancel = cancel
 
 	s.mu.Lock()
-	jobs := append([]core.Job(nil), s.jobs...)
+	jobs := append([]contracts.Job(nil), s.jobs...)
 	s.mu.Unlock()
 
 	for _, job := range jobs {
@@ -90,7 +92,7 @@ func (s *IntervalScheduler) Start() {
 	s.log.Info("scheduler: started with %d job(s)", len(jobs))
 }
 
-func (s *IntervalScheduler) run(ctx context.Context, job core.Job, interval time.Duration) {
+func (s *IntervalScheduler) run(ctx context.Context, job contracts.Job, interval time.Duration) {
 	defer s.wg.Done()
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
@@ -152,7 +154,7 @@ func main() {
 	heartbeatCount := 0
 
 	// Job 1: heartbeat on a configurable interval.
-	if err := sched.Add(core.Job{
+	if err := sched.Add(contracts.Job{
 		Name:     "heartbeat",
 		Schedule: heartbeatInterval,
 		Handler: func(_ context.Context) error {
@@ -174,7 +176,7 @@ func main() {
 	cleanupCount := 0
 
 	// Job 2: simulated cleanup on a configurable interval.
-	if err := sched.Add(core.Job{
+	if err := sched.Add(contracts.Job{
 		Name:     "cleanup",
 		Schedule: cleanupInterval,
 		Handler: func(_ context.Context) error {
@@ -197,9 +199,9 @@ func main() {
 	app.RegisterScheduler(sched)
 
 	// Expose job history via HTTP.
-	app.RegisterController(core.ControllerFunc(func() []core.Route {
-		return []core.Route{
-			core.GET("/jobs/history", func(c *core.Ctx) error {
+	app.RegisterController(contracts.ControllerFunc[httpx.Route](func() []httpx.Route {
+		return []httpx.Route{
+			httpx.GET("/jobs/history", func(c *httpx.Ctx) error {
 				all := history.All()
 				return c.OK(map[string]any{
 					"history": all,
@@ -208,7 +210,7 @@ func main() {
 			}).
 				Tag("jobs").
 				Describe("Job execution history", "Returns the last 100 job executions.").
-				WithResponse(core.WithResponse[map[string]any](200)),
+				WithResponse(httpx.WithResponse[map[string]any](200)),
 		}
 	}))
 
