@@ -30,11 +30,11 @@ If you are new to Keel, work through the examples in order:
 | 4 | [04-rest-crud](./examples/04-rest-crud) | Build a complete CRUD REST service |
 | 5 | [05-validation](./examples/05-validation) | Validate request bodies with struct tags |
 | 6 | [06-middleware](./examples/06-middleware) | Write and apply custom middleware |
-| 7 | [07-jwt-auth](./examples/07-jwt-auth) | Protect routes with JWT authentication |
+| 7 | [07-jwt-auth](./examples/07-jwt-auth) | Protect routes with the ss-keel-jwt addon |
 | 8 | [08-gorm-postgres](./examples/08-gorm-postgres) | Persist data with GORM and PostgreSQL |
 | 9 | [09-scheduler-cron](./examples/09-scheduler-cron) | Schedule background jobs with cron |
 | 10 | [10-addon-example](./examples/10-addon-example) | Integrate a Keel addon |
-| 11 | [11-jwt-addon](./examples/11-jwt-addon) | JWT auth via the ss-keel-jwt addon |
+| 11 | [11-jwt-addon](./examples/11-jwt-addon) | JWT addon flow with refresh and RBAC |
 | 12 | [12-oauth](./examples/12-oauth) | OAuth2 login with GitHub and Google |
 | 13 | [13-mongo](./examples/13-mongo) | Document CRUD with MongoDB |
 
@@ -61,7 +61,7 @@ Shows how Keel uses `validate` struct tags together with `ctx.ParseBody()` to re
 Custom request middleware: correlation ID injection, response timing header, and a simple IP blocklist.
 
 ### 07 — JWT Auth
-JWT-based authentication guard. Issues tokens on `POST /auth/login` and protects routes with a reusable middleware.
+JWT authentication using the [ss-keel-jwt](https://github.com/slice-soft/ss-keel-jwt) addon in a minimal login flow. Issues tokens on `POST /auth/login` and protects routes with the addon's reusable middleware.
 
 ### 08 — GORM + PostgreSQL
 Database-backed CRUD using [ss-keel-gorm](https://github.com/slice-soft/ss-keel-gorm) with migrations, a repository pattern, and connection health checks.
@@ -73,7 +73,7 @@ Register recurring background jobs with the Keel scheduler. Includes a simple in
 Demonstrates how to consume a Keel addon installed via the Keel CLI (`keel add`).
 
 ### 11 — JWT Addon
-Authentication using the [ss-keel-jwt](https://github.com/slice-soft/ss-keel-jwt) addon: token generation, route protection with `jwtProvider.Middleware()`, token refresh, and role-based access control.
+A deeper [ss-keel-jwt](https://github.com/slice-soft/ss-keel-jwt) addon example focused on token refresh, claims inspection, and role-based access control on top of `jwtProvider.Middleware()`.
 
 ### 12 — OAuth2
 Social login with GitHub and Google via the [ss-keel-oauth](https://github.com/slice-soft/ss-keel-oauth) addon. After the OAuth flow the addon issues a signed JWT so protected routes work identically to the JWT addon example.

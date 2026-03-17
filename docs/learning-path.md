@@ -89,14 +89,14 @@ You will learn:
 Production essentials.
 
 ### 07 — JWT Auth
-**Goal:** Protect routes with authentication.
+**Goal:** Protect routes with the JWT addon in a minimal auth flow.
 
 You will learn:
-- Issuing HS256 JWTs with `golang-jwt/jwt`
-- `Authorization: Bearer` header validation
-- `c.Locals("_keel_user")` — authenticated user propagation
-- `core.UserAs[T]()` — type-safe principal extraction
-- Role-based `RequireRole` middleware
+- `jwt.New(jwt.Config{})` — initialize the JWT provider
+- `jwtProvider.GenerateToken()` — issue signed tokens from a login endpoint
+- `jwtProvider.Middleware()` — validate `Authorization: Bearer` headers
+- `jwt.ClaimsFromCtx()` — read JWT claims inside handlers
+- Role-based `RequireRole` middleware on top of addon claims
 
 ---
 
@@ -143,7 +143,7 @@ You will learn:
 First-class addons for authentication and persistence.
 
 ### 11 — JWT Addon
-**Goal:** Use the official JWT addon instead of hand-rolling auth.
+**Goal:** Go deeper with the official JWT addon in a dedicated addon example.
 
 You will learn:
 - Installing an addon with `keel add jwt`

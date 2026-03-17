@@ -199,7 +199,8 @@ func main() {
 				return c.NoContent()
 			}).
 				Tag("products").
-				Describe("Delete product", "Soft deletes the product via GORM's DeletedAt field."),
+				Describe("Delete product", "Soft deletes the product via GORM's DeletedAt field.").
+				WithResponse(httpx.WithResponse[struct{}](204)),
 		}
 	}))
 

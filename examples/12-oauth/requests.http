@@ -1,8 +1,9 @@
 @base = http://localhost:7331
 
 # OAuth flows require a browser — open these URLs directly.
-# After a successful callback the server returns a JWT in the response body.
-# Copy that token and paste it as @token below.
+# By default the callback returns a JWT in the response body.
+# If OAUTH_REDIRECT_ON_SUCCESS is set, the backend redirects to your frontend instead.
+# Copy the token and paste it as @token below.
 
 @token = <paste-jwt-from-oauth-callback-here>
 
@@ -12,7 +13,7 @@ GET {{base}}/auth/github
 ### Start Google OAuth flow (open in browser)
 GET {{base}}/auth/google
 
-# After the OAuth flow completes, the callback returns:
+# After the OAuth flow completes in JSON mode, the callback returns:
 #   { "token": "eyJ...", "token_type": "Bearer" }
 # Paste the token value above as @token, then use the requests below.
 

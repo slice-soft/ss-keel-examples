@@ -50,7 +50,7 @@ Quick reference: which example covers which Keel concept.
 | GORM + PostgreSQL | | | | | | | | ✓ | | | | | |
 | MongoDB | | | | | | | | | | | | | ✓ |
 | OAuth2 | | | | | | | | | | | | ✓ | |
-| Addon integration | | | | | | | | | | ✓ | ✓ | ✓ | ✓ |
+| Addon integration | | | | | | | ✓ | ✓ | | ✓ | ✓ | ✓ | ✓ |
 
 ## Validation Tags Used
 
@@ -75,7 +75,7 @@ Quick reference: which example covers which Keel concept.
 |-----------|---------|
 | `github.com/golang-jwt/jwt/v5` | 07, 11, 12 |
 | `github.com/slice-soft/ss-keel-gorm` | 08 |
-| `github.com/slice-soft/ss-keel-jwt` | 11, 12 |
+| `github.com/slice-soft/ss-keel-jwt` | 07, 11, 12 |
 | `github.com/slice-soft/ss-keel-oauth` | 12 |
 | `github.com/slice-soft/ss-keel-mongo` | 13 |
 | `gorm.io/driver/postgres` | 08 |
