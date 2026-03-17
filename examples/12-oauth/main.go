@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strings"
+
 	"github.com/slice-soft/ss-keel-core/config"
 	"github.com/slice-soft/ss-keel-core/contracts"
 	"github.com/slice-soft/ss-keel-core/core"
@@ -14,21 +16,14 @@ func main() {
 	port := config.GetEnvIntOrDefault("PORT", 7331)
 	env := config.GetEnvOrDefault("APP_ENV", "development")
 	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "oauth-example")
+	routePrefix := normalizeOAuthRoutePrefix(config.GetEnvOrDefault("OAUTH_ROUTE_PREFIX", "/auth"))
+	redirectBase := normalizeOAuthRedirectBase(config.GetEnvOrDefault("OAUTH_REDIRECT_BASE_URL", "http://localhost:7331"))
+	redirectOnSuccess := normalizeOAuthSuccessRedirect(config.GetEnvOrDefault("OAUTH_REDIRECT_ON_SUCCESS", ""))
+	redirectTokenParam := normalizeOAuthRedirectTokenParam(config.GetEnvOrDefault("OAUTH_REDIRECT_TOKEN_PARAM", "token"))
+	enabledProviders := parseOAuthEnabledProviders(config.GetEnvOrDefault("OAUTH_ENABLED_PROVIDERS", ""))
 
 	// JWT config — tokens are issued after a successful OAuth flow.
 	jwtSecret := config.GetEnvOrDefault("JWT_SECRET", "change-me-in-production")
-
-	// GitHub OAuth app credentials — create one at https://github.com/settings/developers.
-	// Set the callback URL to: http://localhost:7331/auth/github/callback
-	githubClientID := config.GetEnvOrDefault("GITHUB_CLIENT_ID", "")
-	githubClientSecret := config.GetEnvOrDefault("GITHUB_CLIENT_SECRET", "")
-	githubCallback := config.GetEnvOrDefault("GITHUB_CALLBACK_URL", "http://localhost:7331/auth/github/callback")
-
-	// Google OAuth app credentials — create one at https://console.cloud.google.com/apis/credentials.
-	// Set the callback URL to: http://localhost:7331/auth/google/callback
-	googleClientID := config.GetEnvOrDefault("GOOGLE_CLIENT_ID", "")
-	googleClientSecret := config.GetEnvOrDefault("GOOGLE_CLIENT_SECRET", "")
-	googleCallback := config.GetEnvOrDefault("GOOGLE_CALLBACK_URL", "http://localhost:7331/auth/google/callback")
 
 	log := logger.NewLogger(env == "production")
 
@@ -50,16 +45,20 @@ func main() {
 	oauthManager := oauth.New(oauth.Config{
 		Signer: jwtProvider, // JWT addon signs the token after successful OAuth
 		Logger: log,
-		GitHub: &oauth.ProviderConfig{
-			ClientID:     githubClientID,
-			ClientSecret: githubClientSecret,
-			RedirectURL:  githubCallback,
-		},
-		Google: &oauth.ProviderConfig{
-			ClientID:     googleClientID,
-			ClientSecret: googleClientSecret,
-			RedirectURL:  googleCallback,
-		},
+		Google: oauthProviderConfig(redirectBase, routePrefix, enabledProviders, oauth.ProviderGoogle,
+			config.GetEnvOrDefault("OAUTH_GOOGLE_CLIENT_ID", ""),
+			config.GetEnvOrDefault("OAUTH_GOOGLE_CLIENT_SECRET", ""),
+		),
+		GitHub: oauthProviderConfig(redirectBase, routePrefix, enabledProviders, oauth.ProviderGitHub,
+			config.GetEnvOrDefault("OAUTH_GITHUB_CLIENT_ID", ""),
+			config.GetEnvOrDefault("OAUTH_GITHUB_CLIENT_SECRET", ""),
+		),
+		GitLab: oauthProviderConfig(redirectBase, routePrefix, enabledProviders, oauth.ProviderGitLab,
+			config.GetEnvOrDefault("OAUTH_GITLAB_CLIENT_ID", ""),
+			config.GetEnvOrDefault("OAUTH_GITLAB_CLIENT_SECRET", ""),
+		),
+		RedirectOnSuccess:  redirectOnSuccess,
+		RedirectTokenParam: redirectTokenParam,
 	})
 
 	app := core.New(core.KConfig{
@@ -77,12 +76,13 @@ func main() {
 		},
 	})
 
-	// RegisterController auto-generates routes for all configured providers:
+	// RegisterController auto-generates routes for all configured providers.
+	// With the default routePrefix it exposes:
 	//   GET /auth/github          → redirect to GitHub authorization page
-	//   GET /auth/github/callback → exchange code, return JWT
+	//   GET /auth/github/callback → exchange code, return JWT or redirect to the frontend
 	//   GET /auth/google          → redirect to Google authorization page
-	//   GET /auth/google/callback → exchange code, return JWT
-	app.RegisterController(oauth.NewController(oauthManager))
+	//   GET /auth/google/callback → exchange code, return JWT or redirect to the frontend
+	app.RegisterController(oauth.NewController(oauthManager, routePrefix))
 
 	// Protected routes — require a valid JWT (issued by the OAuth callback above).
 	api := app.Group("/api", jwtProvider.Middleware())
@@ -152,8 +152,9 @@ func main() {
 	}))
 
 	// Print OAuth login URLs to console for easy testing.
-	log.Info("GitHub login: http://localhost:%d/auth/github", port)
-	log.Info("Google login: http://localhost:%d/auth/google", port)
+	log.Info("GitHub login: http://localhost:%d%s/github", port, routePrefix)
+	log.Info("Google login: http://localhost:%d%s/google", port, routePrefix)
+	log.Info("GitLab login: http://localhost:%d%s/gitlab", port, routePrefix)
 	log.Info("Docs:         http://localhost:%d/docs", port)
 
 	log.Info("starting %s on port %d (env=%s)", serviceName, port, env)
@@ -161,4 +162,68 @@ func main() {
 	if err := app.Listen(); err != nil {
 		app.Logger().Error("server error: %v", err)
 	}
+}
+
+func oauthProviderConfig(redirectBase, routePrefix string, enabledProviders map[oauth.ProviderName]struct{}, provider oauth.ProviderName, clientID, clientSecret string) *oauth.ProviderConfig {
+	clientID = strings.TrimSpace(clientID)
+	clientSecret = strings.TrimSpace(clientSecret)
+	if clientID == "" || clientSecret == "" {
+		return nil
+	}
+	if len(enabledProviders) > 0 {
+		if _, ok := enabledProviders[provider]; !ok {
+			return nil
+		}
+	}
+	return &oauth.ProviderConfig{
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
+		RedirectURL:  redirectBase + routePrefix + "/" + string(provider) + "/callback",
+	}
+}
+
+func parseOAuthEnabledProviders(raw string) map[oauth.ProviderName]struct{} {
+	enabledProviders := make(map[oauth.ProviderName]struct{})
+	for _, part := range strings.Split(raw, ",") {
+		switch oauth.ProviderName(strings.ToLower(strings.TrimSpace(part))) {
+		case oauth.ProviderGoogle, oauth.ProviderGitHub, oauth.ProviderGitLab:
+			enabledProviders[oauth.ProviderName(strings.ToLower(strings.TrimSpace(part)))] = struct{}{}
+		}
+	}
+	return enabledProviders
+}
+
+func normalizeOAuthRoutePrefix(raw string) string {
+	trimmed := strings.TrimSpace(raw)
+	if trimmed == "" || trimmed == "/" {
+		return "/auth"
+	}
+	if !strings.HasPrefix(trimmed, "/") {
+		trimmed = "/" + trimmed
+	}
+	trimmed = strings.TrimRight(trimmed, "/")
+	if trimmed == "" {
+		return "/auth"
+	}
+	return trimmed
+}
+
+func normalizeOAuthRedirectBase(raw string) string {
+	trimmed := strings.TrimSpace(raw)
+	if trimmed == "" {
+		trimmed = "http://localhost:7331"
+	}
+	return strings.TrimRight(trimmed, "/")
+}
+
+func normalizeOAuthSuccessRedirect(raw string) string {
+	return strings.TrimSpace(raw)
+}
+
+func normalizeOAuthRedirectTokenParam(raw string) string {
+	trimmed := strings.TrimSpace(raw)
+	if trimmed == "" {
+		return "token"
+	}
+	return trimmed
 }

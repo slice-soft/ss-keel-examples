@@ -94,7 +94,7 @@ func main() {
 				WithQueryParam("limit", "integer", false, "Items per page (default: 20, max: 100)").
 				WithResponse(httpx.WithResponse[httpx.Page[Note]](200)),
 
-			// GET /api/v1/notes/:id — fetch by ObjectID hex.
+			// GET /api/v1/notes/:id — fetch by UUID string ID.
 			httpx.GET("/notes/:id", func(c *httpx.Ctx) error {
 				note, err := repo.FindByID(context.Background(), c.Params("id"))
 				if err != nil || note == nil {
@@ -164,7 +164,8 @@ func main() {
 				return c.NoContent()
 			}).
 				Tag("notes").
-				Describe("Delete a note"),
+				Describe("Delete a note").
+				WithResponse(httpx.WithResponse[struct{}](204)),
 		}
 	}))
 

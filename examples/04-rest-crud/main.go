@@ -202,7 +202,8 @@ func main() {
 				return c.NoContent()
 			}).
 				Tag("tasks").
-				Describe("Delete a task"),
+				Describe("Delete a task").
+				WithResponse(httpx.WithResponse[struct{}](204)),
 		}
 	}))
 
