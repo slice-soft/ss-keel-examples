@@ -138,11 +138,56 @@ You will learn:
 
 ---
 
+## Phase 5 — Addon Ecosystem (examples 11–13)
+
+First-class addons for authentication and persistence.
+
+### 11 — JWT Addon
+**Goal:** Use the official JWT addon instead of hand-rolling auth.
+
+You will learn:
+- Installing an addon with `keel add jwt`
+- `jwt.New(jwt.Config{})` — provider initialization
+- `jwtProvider.GenerateToken()` / `jwtProvider.RefreshToken()` — token lifecycle
+- `jwtProvider.Middleware()` — drop-in route protection
+- `jwt.ClaimsFromCtx()` — reading JWT payload in handlers
+- Role-based `RequireRole` guard on top of the addon
+
+---
+
+### 12 — OAuth2
+**Goal:** Add social login without managing passwords.
+
+You will learn:
+- Installing the OAuth addon with `keel add oauth`
+- `oauth.New(oauth.Config{})` — configuring GitHub and Google providers
+- `oauth.NewController()` — auto-generated redirect and callback routes
+- How the addon issues a signed JWT after a successful OAuth flow
+- Combining `ss-keel-oauth` + `ss-keel-jwt` in a single service
+- Extracting provider-specific claims (`sub`, `data.provider`, `data.avatar_url`)
+
+---
+
+### 13 — MongoDB
+**Goal:** Persist documents in MongoDB using the official addon.
+
+You will learn:
+- Installing the addon with `keel add mongo`
+- `mongo.New(mongo.Config{})` — client initialization and connection
+- `mongo.EntityBase` — UUID ID, `CreatedAt`, `UpdatedAt` in milliseconds
+- `mongo.NewRepository[T, ID]()` — generic typed repository
+- `repo.FindAll()` with built-in pagination via `ctx.ParsePagination()`
+- `OnCreate()` / `OnUpdate()` hooks for timestamp management
+- `mongo.NewHealthChecker()` — MongoDB wired into `/health`
+
+---
+
 ## What Comes Next
 
 After completing all examples:
 
 1. Scaffold a new project: `keel new my-service`
-2. Add a database: `keel add gorm`
-3. Read the [official docs](https://docs.keel-go.dev)
-4. Explore [ss-keel-core](https://github.com/slice-soft/ss-keel-core) source code
+2. Add a database: `keel add gorm` or `keel add mongo`
+3. Add authentication: `keel add jwt` or `keel add oauth`
+4. Read the [official docs](https://docs.keel-go.dev)
+5. Explore [ss-keel-core](https://github.com/slice-soft/ss-keel-core) source code
