@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/slice-soft/ss-keel-core/config"
 	"github.com/slice-soft/ss-keel-core/contracts"
@@ -12,7 +13,7 @@ import (
 )
 
 // Note is the MongoDB document model.
-// EntityBase provides ID (hex ObjectID), CreatedAt, and UpdatedAt fields.
+// EntityBase provides ID (UUID string), CreatedAt and UpdatedAt (Unix ms).
 // Call OnCreate() before Insert and OnUpdate() before Update.
 type Note struct {
 	mongo.EntityBase `bson:",inline"`
@@ -50,12 +51,13 @@ func main() {
 	})
 	if err != nil {
 		log.Error("failed to connect to MongoDB: %v", err)
+		os.Exit(1)
 	}
 	defer client.Close()
 
 	// NewRepository creates a type-safe CRUD repository for the "notes" collection.
-	// WithObjectIDHex converts string IDs to primitive.ObjectID for MongoDB queries.
-	repo := mongo.NewRepository[Note, string](client, "notes", mongo.WithObjectIDHex[Note]())
+	// IDs are UUID strings — Keel uses UUID as the only ID strategy across all databases.
+	repo := mongo.NewRepository[Note, string](client, "notes")
 
 	app := core.New(core.KConfig{
 		ServiceName: serviceName,

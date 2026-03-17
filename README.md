@@ -34,6 +34,9 @@ If you are new to Keel, work through the examples in order:
 | 8 | [08-gorm-postgres](./examples/08-gorm-postgres) | Persist data with GORM and PostgreSQL |
 | 9 | [09-scheduler-cron](./examples/09-scheduler-cron) | Schedule background jobs with cron |
 | 10 | [10-addon-example](./examples/10-addon-example) | Integrate a Keel addon |
+| 11 | [11-jwt-addon](./examples/11-jwt-addon) | JWT auth via the ss-keel-jwt addon |
+| 12 | [12-oauth](./examples/12-oauth) | OAuth2 login with GitHub and Google |
+| 13 | [13-mongo](./examples/13-mongo) | Document CRUD with MongoDB |
 
 ---
 
@@ -69,6 +72,15 @@ Register recurring background jobs with the Keel scheduler. Includes a simple in
 ### 10 — Addon Example
 Demonstrates how to consume a Keel addon installed via the Keel CLI (`keel add`).
 
+### 11 — JWT Addon
+Authentication using the [ss-keel-jwt](https://github.com/slice-soft/ss-keel-jwt) addon: token generation, route protection with `jwtProvider.Middleware()`, token refresh, and role-based access control.
+
+### 12 — OAuth2
+Social login with GitHub and Google via the [ss-keel-oauth](https://github.com/slice-soft/ss-keel-oauth) addon. After the OAuth flow the addon issues a signed JWT so protected routes work identically to the JWT addon example.
+
+### 13 — MongoDB
+Document CRUD using the [ss-keel-mongo](https://github.com/slice-soft/ss-keel-mongo) addon: `EntityBase`, a generic typed repository, pagination, partial updates, and a built-in MongoDB health checker.
+
 ---
 
 ## How to Run an Example
@@ -93,7 +105,7 @@ The server starts on port **7331** by default.
 
 Open the interactive API docs at [http://localhost:7331/docs](http://localhost:7331/docs).
 
-> **Note:** Some examples (08-gorm-postgres) require Docker. See the example README for details.
+> **Note:** Some examples (08-gorm-postgres, 12-oauth, 13-mongo) require Docker or external credentials. See each example's README for details.
 
 ---
 

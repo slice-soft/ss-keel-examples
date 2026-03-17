@@ -4,7 +4,7 @@ go 1.25.7
 
 require (
 	github.com/slice-soft/ss-keel-core v0.7.0
-	github.com/slice-soft/ss-keel-gorm v1.4.0
+	github.com/slice-soft/ss-keel-gorm v1.4.1
 	gorm.io/gorm v1.31.1
 )
 

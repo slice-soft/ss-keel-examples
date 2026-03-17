@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"time"
 
 	"github.com/slice-soft/ss-keel-core/config"
@@ -65,13 +66,23 @@ func main() {
 	})
 	if err != nil {
 		log.Error("failed to connect to database: %v", err)
+		os.Exit(1)
 	}
 
 	db := dbInstance.DB
 
-	// Auto-migrate the schema.
+	// NOTE: Keel does not run automatic migrations.
+	// You are responsible for managing schema changes manually.
+	//
+	// Options:
+	//   Option 1 (recommended): raw SQL files — up.sql / down.sql
+	//   Option 2: external tools — goose, atlas, dbmate
+	//   Option 3: CI-driven — apply SQL scripts in your pipeline
+	//
+	// AutoMigrate is shown here only for development convenience — do NOT use it in production.
 	if err := db.AutoMigrate(&Product{}); err != nil {
 		log.Error("migration failed: %v", err)
+		os.Exit(1)
 	}
 
 	app := core.New(core.KConfig{
