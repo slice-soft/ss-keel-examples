@@ -138,7 +138,7 @@ You will learn:
 
 ---
 
-## Phase 5 — Addon Ecosystem (examples 11–13)
+## Phase 5 — Addon Ecosystem (examples 11–14)
 
 First-class addons for authentication and persistence.
 
@@ -182,6 +182,19 @@ You will learn:
 
 ---
 
+### 14 — Redis Cache
+**Goal:** Add cache-aside reads and invalidation with the official Redis addon.
+
+You will learn:
+- Installing the addon with `keel add redis`
+- `ssredis.New(ssredis.Config{})` — client initialization and connection
+- `ssredis.NewHealthChecker()` — Redis wired into `/health`
+- Injecting `*ssredis.Client` into a module
+- Accepting `contracts.Cache` in the service layer
+- Cache-aside reads with `Get` + `Set` and invalidation with `Delete`
+
+---
+
 ## What Comes Next
 
 After completing all examples:
@@ -189,5 +202,6 @@ After completing all examples:
 1. Scaffold a new project: `keel new my-service`
 2. Add a database: `keel add gorm` or `keel add mongo`
 3. Add authentication: `keel add jwt` or `keel add oauth`
-4. Read the [official docs](https://docs.keel-go.dev)
-5. Explore [ss-keel-core](https://github.com/slice-soft/ss-keel-core) source code
+4. Add caching when needed: `keel add redis`
+5. Read the [official docs](https://docs.keel-go.dev)
+6. Explore [ss-keel-core](https://github.com/slice-soft/ss-keel-core) source code
