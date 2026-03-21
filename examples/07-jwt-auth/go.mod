@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/gofiber/fiber/v2 v2.52.0
 	github.com/slice-soft/ss-keel-core v0.7.0
-	github.com/slice-soft/ss-keel-jwt v1.3.0
+	github.com/slice-soft/ss-keel-jwt v1.4.0
 )
 
 require (
