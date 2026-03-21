@@ -1,0 +1,23 @@
+@baseUrl = http://localhost:7331
+
+### First read: source store -> Redis fill
+GET {{baseUrl}}/api/v1/notes/note-1
+
+### Second read: Redis hit
+GET {{baseUrl}}/api/v1/notes/note-1
+
+### Create or replace a note and invalidate the cache
+POST {{baseUrl}}/api/v1/notes
+Content-Type: application/json
+
+{
+  "id": "note-3",
+  "title": "Fresh note",
+  "body": "This note is written to the source store and its cache entry is invalidated."
+}
+
+### Read the new note: source store -> Redis fill
+GET {{baseUrl}}/api/v1/notes/note-3
+
+### Delete the note and invalidate the cache
+DELETE {{baseUrl}}/api/v1/notes/note-3

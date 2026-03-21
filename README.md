@@ -37,6 +37,7 @@ If you are new to Keel, work through the examples in order:
 | 11 | [11-jwt-addon](./examples/11-jwt-addon) | JWT addon flow with refresh and RBAC |
 | 12 | [12-oauth](./examples/12-oauth) | OAuth2 login with GitHub and Google |
 | 13 | [13-mongo](./examples/13-mongo) | Document CRUD with MongoDB |
+| 14 | [14-redis-cache](./examples/14-redis-cache) | Cache-aside reads with Redis |
 
 ---
 
@@ -81,6 +82,9 @@ Social login with GitHub and Google via the [ss-keel-oauth](https://github.com/s
 ### 13 — MongoDB
 Document CRUD using the [ss-keel-mongo](https://github.com/slice-soft/ss-keel-mongo) addon: `EntityBase`, a generic typed repository, pagination, partial updates, and a built-in MongoDB health checker.
 
+### 14 — Redis Cache
+Cache-aside reads and invalidation using the [ss-keel-redis](https://github.com/slice-soft/ss-keel-redis) addon. The module receives `*ssredis.Client`, while the service depends on the generic `contracts.Cache` interface.
+
 ---
 
 ## How to Run an Example
@@ -105,7 +109,7 @@ The server starts on port **7331** by default.
 
 Open the interactive API docs at [http://localhost:7331/docs](http://localhost:7331/docs).
 
-> **Note:** Some examples (08-gorm-postgres, 12-oauth, 13-mongo) require Docker or external credentials. See each example's README for details.
+> **Note:** Some examples (08-gorm-postgres, 12-oauth, 13-mongo, 14-redis-cache) require Docker or external services. See each example's README for details.
 
 ---
 
