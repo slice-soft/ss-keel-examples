@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/slice-soft/ss-keel-core v0.11.0
 	github.com/slice-soft/ss-keel-jwt v1.6.0
-	github.com/slice-soft/ss-keel-oauth v1.9.0
+	github.com/slice-soft/ss-keel-oauth v1.9.1
 )
 
 require (
