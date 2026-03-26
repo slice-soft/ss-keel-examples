@@ -12,26 +12,39 @@ import (
 	"github.com/slice-soft/ss-keel-oauth/oauth"
 )
 
+type AppConfig struct {
+	Name                  string `keel:"app.name"`
+	Env                   string `keel:"app.env"`
+	Port                  int    `keel:"server.port"`
+	JWTSecret             string `keel:"jwt.secret"`
+	OAuthRoutePrefix      string `keel:"oauth.route-prefix"`
+	OAuthRedirectBase     string `keel:"oauth.redirect-base-url"`
+	OAuthRedirectSuccess  string `keel:"oauth.redirect-on-success"`
+	OAuthRedirectParam    string `keel:"oauth.redirect-token-param"`
+	OAuthEnabledProviders string `keel:"oauth.enabled-providers"`
+	OAuthGoogleClientID   string `keel:"oauth.google.client-id"`
+	OAuthGoogleSecret     string `keel:"oauth.google.client-secret"`
+	OAuthGitHubClientID   string `keel:"oauth.github.client-id"`
+	OAuthGitHubSecret     string `keel:"oauth.github.client-secret"`
+	OAuthGitLabClientID   string `keel:"oauth.gitlab.client-id"`
+	OAuthGitLabSecret     string `keel:"oauth.gitlab.client-secret"`
+}
+
 func main() {
-	port := config.GetEnvIntOrDefault("PORT", 7331)
-	env := config.GetEnvOrDefault("APP_ENV", "development")
-	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "oauth-example")
-	routePrefix := normalizeOAuthRoutePrefix(config.GetEnvOrDefault("OAUTH_ROUTE_PREFIX", "/auth"))
-	redirectBase := normalizeOAuthRedirectBase(config.GetEnvOrDefault("OAUTH_REDIRECT_BASE_URL", "http://localhost:7331"))
-	redirectOnSuccess := normalizeOAuthSuccessRedirect(config.GetEnvOrDefault("OAUTH_REDIRECT_ON_SUCCESS", ""))
-	redirectTokenParam := normalizeOAuthRedirectTokenParam(config.GetEnvOrDefault("OAUTH_REDIRECT_TOKEN_PARAM", "token"))
-	enabledProviders := parseOAuthEnabledProviders(config.GetEnvOrDefault("OAUTH_ENABLED_PROVIDERS", ""))
+	cfg := config.MustLoadConfig[AppConfig]()
+	routePrefix := normalizeOAuthRoutePrefix(cfg.OAuthRoutePrefix)
+	redirectBase := normalizeOAuthRedirectBase(cfg.OAuthRedirectBase)
+	redirectOnSuccess := normalizeOAuthSuccessRedirect(cfg.OAuthRedirectSuccess)
+	redirectTokenParam := normalizeOAuthRedirectTokenParam(cfg.OAuthRedirectParam)
+	enabledProviders := parseOAuthEnabledProviders(cfg.OAuthEnabledProviders)
 
-	// JWT config — tokens are issued after a successful OAuth flow.
-	jwtSecret := config.GetEnvOrDefault("JWT_SECRET", "change-me-in-production")
-
-	log := logger.NewLogger(env == "production")
+	log := logger.NewLogger(cfg.Env == "production")
 
 	// Initialize the ss-keel-jwt addon.
 	// Run:  keel add jwt
 	jwtProvider, err := jwt.New(jwt.Config{
-		SecretKey:     jwtSecret,
-		Issuer:        serviceName,
+		SecretKey:     cfg.JWTSecret,
+		Issuer:        cfg.Name,
 		TokenTTLHours: 24,
 		Logger:        log,
 	})
@@ -46,25 +59,25 @@ func main() {
 		Signer: jwtProvider, // JWT addon signs the token after successful OAuth
 		Logger: log,
 		Google: oauthProviderConfig(redirectBase, routePrefix, enabledProviders, oauth.ProviderGoogle,
-			config.GetEnvOrDefault("OAUTH_GOOGLE_CLIENT_ID", ""),
-			config.GetEnvOrDefault("OAUTH_GOOGLE_CLIENT_SECRET", ""),
+			cfg.OAuthGoogleClientID,
+			cfg.OAuthGoogleSecret,
 		),
 		GitHub: oauthProviderConfig(redirectBase, routePrefix, enabledProviders, oauth.ProviderGitHub,
-			config.GetEnvOrDefault("OAUTH_GITHUB_CLIENT_ID", ""),
-			config.GetEnvOrDefault("OAUTH_GITHUB_CLIENT_SECRET", ""),
+			cfg.OAuthGitHubClientID,
+			cfg.OAuthGitHubSecret,
 		),
 		GitLab: oauthProviderConfig(redirectBase, routePrefix, enabledProviders, oauth.ProviderGitLab,
-			config.GetEnvOrDefault("OAUTH_GITLAB_CLIENT_ID", ""),
-			config.GetEnvOrDefault("OAUTH_GITLAB_CLIENT_SECRET", ""),
+			cfg.OAuthGitLabClientID,
+			cfg.OAuthGitLabSecret,
 		),
 		RedirectOnSuccess:  redirectOnSuccess,
 		RedirectTokenParam: redirectTokenParam,
 	})
 
 	app := core.New(core.KConfig{
-		ServiceName: serviceName,
-		Port:        port,
-		Env:         env,
+		ServiceName: cfg.Name,
+		Port:        cfg.Port,
+		Env:         cfg.Env,
 		Docs: core.DocsConfig{
 			Title:       "OAuth2 API",
 			Version:     "1.0.0",
@@ -152,12 +165,12 @@ func main() {
 	}))
 
 	// Print OAuth login URLs to console for easy testing.
-	log.Info("GitHub login: http://localhost:%d%s/github", port, routePrefix)
-	log.Info("Google login: http://localhost:%d%s/google", port, routePrefix)
-	log.Info("GitLab login: http://localhost:%d%s/gitlab", port, routePrefix)
-	log.Info("Docs:         http://localhost:%d/docs", port)
+	log.Info("GitHub login: http://localhost:%d%s/github", cfg.Port, routePrefix)
+	log.Info("Google login: http://localhost:%d%s/google", cfg.Port, routePrefix)
+	log.Info("GitLab login: http://localhost:%d%s/gitlab", cfg.Port, routePrefix)
+	log.Info("Docs:         http://localhost:%d/docs", cfg.Port)
 
-	log.Info("starting %s on port %d (env=%s)", serviceName, port, env)
+	log.Info("starting %s on port %d (env=%s)", cfg.Name, cfg.Port, cfg.Env)
 
 	if err := app.Listen(); err != nil {
 		app.Logger().Error("server error: %v", err)

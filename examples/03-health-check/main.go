@@ -12,6 +12,12 @@ import (
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
+type AppConfig struct {
+	Name string `keel:"app.name"`
+	Env  string `keel:"app.env"`
+	Port int    `keel:"server.port"`
+}
+
 // CacheChecker verifies that the in-memory cache is responding.
 // Implements contracts.HealthChecker.
 type CacheChecker struct {
@@ -55,9 +61,10 @@ func (d *DatabaseChecker) Check(_ context.Context) error {
 }
 
 func main() {
-	port := config.GetEnvIntOrDefault("PORT", 7331)
-	env := config.GetEnvOrDefault("APP_ENV", "development")
-	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "health-check")
+	cfg := config.MustLoadConfig[AppConfig]()
+	port := cfg.Port
+	env := cfg.Env
+	serviceName := cfg.Name
 
 	log := logger.NewLogger(env == "production")
 

@@ -4,11 +4,12 @@ go 1.25.0
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.0
-	github.com/slice-soft/ss-keel-core v0.7.0
-	github.com/slice-soft/ss-keel-jwt v1.4.0
+	github.com/slice-soft/ss-keel-core v0.11.0
+	github.com/slice-soft/ss-keel-jwt v1.6.0
 )
 
 require (
+	github.com/BurntSushi/toml v1.6.0 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect

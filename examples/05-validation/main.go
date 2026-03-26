@@ -8,6 +8,12 @@ import (
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
+type AppConfig struct {
+	Name string `keel:"app.name"`
+	Env  string `keel:"app.env"`
+	Port int    `keel:"server.port"`
+}
+
 // RegisterRequest demonstrates a rich set of validation rules.
 type RegisterRequest struct {
 	Name     string `json:"name"     validate:"required,min=2,max=80"`
@@ -40,9 +46,10 @@ type OrderItem struct {
 }
 
 func main() {
-	port := config.GetEnvIntOrDefault("PORT", 7331)
-	env := config.GetEnvOrDefault("APP_ENV", "development")
-	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "validation-example")
+	cfg := config.MustLoadConfig[AppConfig]()
+	port := cfg.Port
+	env := cfg.Env
+	serviceName := cfg.Name
 
 	log := logger.NewLogger(env == "production")
 

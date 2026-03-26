@@ -1,0 +1,31 @@
+[project]
+name    = "mongo-example"
+module  = "mongo-example"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/mongo-example ."
+test  = "go test ./..."
+
+[[addons]]
+id           = "ss-keel-mongo"
+version      = "1.6.0"
+repo         = "github.com/slice-soft/ss-keel-mongo"
+capabilities = ["database"]
+resources    = ["mongodb"]
+
+[[env]]
+key      = "MONGO_URI"
+source   = "ss-keel-mongo"
+required = false
+default  = "mongodb://localhost:27017"
+description = "MongoDB connection URI. Atlas example: mongodb+srv://user:pass@cluster.mongodb.net"
+
+[[env]]
+key      = "MONGO_DATABASE"
+source   = "ss-keel-mongo"
+required = false
+default  = "app"
+description = "MongoDB database name"

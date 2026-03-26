@@ -1,0 +1,10 @@
+[project]
+name    = "validation-example"
+module  = "validation-example"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/validation-example ."
+test  = "go test ./..."

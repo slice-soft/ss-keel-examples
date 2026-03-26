@@ -125,12 +125,21 @@ func (s *IntervalScheduler) Stop(ctx context.Context) {
 	}
 }
 
+type AppConfig struct {
+	Name              string `keel:"app.name"`
+	Env               string `keel:"app.env"`
+	Port              int    `keel:"server.port"`
+	HeartbeatInterval string `keel:"scheduler.heartbeat-interval"`
+	CleanupInterval   string `keel:"scheduler.cleanup-interval"`
+}
+
 func main() {
-	port := config.GetEnvIntOrDefault("PORT", 7331)
-	env := config.GetEnvOrDefault("APP_ENV", "development")
-	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "scheduler-cron")
-	heartbeatInterval := config.GetEnvOrDefault("HEARTBEAT_INTERVAL", "10s")
-	cleanupInterval := config.GetEnvOrDefault("CLEANUP_INTERVAL", "1m")
+	cfg := config.MustLoadConfig[AppConfig]()
+	port := cfg.Port
+	env := cfg.Env
+	serviceName := cfg.Name
+	heartbeatInterval := cfg.HeartbeatInterval
+	cleanupInterval := cfg.CleanupInterval
 
 	log := logger.NewLogger(env == "production")
 

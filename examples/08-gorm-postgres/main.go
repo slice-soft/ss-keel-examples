@@ -13,6 +13,12 @@ import (
 	"gorm.io/gorm"
 )
 
+type AppConfig struct {
+	Name string `keel:"app.name"`
+	Env  string `keel:"app.env"`
+	Port int    `keel:"server.port"`
+}
+
 // Product is the GORM model.
 type Product struct {
 	ID          uint           `json:"id"          gorm:"primarykey"`
@@ -42,28 +48,17 @@ type UpdateProductRequest struct {
 }
 
 func main() {
-	port := config.GetEnvIntOrDefault("PORT", 7331)
-	env := config.GetEnvOrDefault("APP_ENV", "development")
-	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "gorm-postgres")
-	dbPort := config.GetEnvIntOrDefault("DB_PORT", 5432)
-	dbHost := config.GetEnvOrDefault("DB_HOST", "localhost")
-	dbUser := config.GetEnvOrDefault("DB_USER", "postgres")
-	dbPassword := config.GetEnvOrDefault("DB_PASSWORD", "postgres")
-	dbName := config.GetEnvOrDefault("DB_NAME", "keelexamples")
-	dbSSLMode := config.GetEnvOrDefault("DB_SSLMODE", "disable")
+	cfg := config.MustLoadConfig[AppConfig]()
+	port := cfg.Port
+	env := cfg.Env
+	serviceName := cfg.Name
 
 	log := logger.NewLogger(env == "production")
 
 	// Connect to PostgreSQL using ss-keel-gorm.
-	dbInstance, err := database.New(database.Config{
-		Engine:   database.EnginePostgres,
-		Host:     dbHost,
-		Port:     dbPort,
-		User:     dbUser,
-		Password: dbPassword,
-		Database: dbName,
-		SSLMode:  dbSSLMode,
-	})
+	dbCfg := config.MustLoadConfig[database.Config]()
+	dbCfg.Logger = log
+	dbInstance, err := database.New(dbCfg)
 	if err != nil {
 		log.Error("failed to connect to database: %v", err)
 		os.Exit(1)

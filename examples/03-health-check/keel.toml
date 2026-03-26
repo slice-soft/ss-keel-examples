@@ -1,0 +1,10 @@
+[project]
+name    = "health-check"
+module  = "health-check"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/health-check ."
+test  = "go test ./..."

@@ -1,0 +1,37 @@
+[project]
+name    = "devpanel-example"
+module  = "devpanel-example"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/devpanel-example ."
+test  = "go test ./..."
+
+[[addons]]
+id           = "ss-keel-devpanel"
+version      = "1.9.0"
+repo         = "github.com/slice-soft/ss-keel-devpanel"
+capabilities = ["observability"]
+
+[[env]]
+key      = "KEEL_PANEL_ENABLED"
+source   = "ss-keel-devpanel"
+required = false
+default  = "true"
+description = "Enable the dev panel UI. Set to false in production."
+
+[[env]]
+key      = "KEEL_PANEL_SECRET"
+source   = "ss-keel-devpanel"
+required = false
+secret   = true
+description = "Bearer token required to access the panel. Leave empty to disable auth."
+
+[[env]]
+key      = "KEEL_PANEL_PATH"
+source   = "ss-keel-devpanel"
+required = false
+default  = "/keel/panel"
+description = "URL prefix for all panel routes."

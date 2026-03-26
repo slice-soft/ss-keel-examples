@@ -1,0 +1,31 @@
+[project]
+name    = "gorm-postgres"
+module  = "gorm-postgres"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/gorm-postgres ."
+test  = "go test ./..."
+
+[[addons]]
+id           = "ss-keel-gorm"
+version      = "1.6.0"
+repo         = "github.com/slice-soft/ss-keel-gorm"
+capabilities = ["database"]
+resources    = ["postgres", "mysql", "sqlite", "sqlserver"]
+
+[[env]]
+key      = "DATABASE_ENGINE"
+source   = "ss-keel-gorm"
+required = false
+default  = "sqlite"
+description = "Optional engine override for the generated GORM bootstrap."
+
+[[env]]
+key      = "DATABASE_URL"
+source   = "ss-keel-gorm"
+required = false
+default  = "./app.db"
+description = "Optional database connection string. Examples: Postgres → postgres://user:pass@host:5432/db?sslmode=disable | MySQL → user:pass@tcp(host:3306)/db?parseTime=true | SQLite → ./app.db"

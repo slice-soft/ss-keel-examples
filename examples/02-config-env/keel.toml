@@ -1,0 +1,10 @@
+[project]
+name    = "config-env"
+module  = "config-env"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/config-env ."
+test  = "go test ./..."

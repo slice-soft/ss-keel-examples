@@ -38,6 +38,7 @@ If you are new to Keel, work through the examples in order:
 | 12 | [12-oauth](./examples/12-oauth) | OAuth2 login with GitHub and Google |
 | 13 | [13-mongo](./examples/13-mongo) | Document CRUD with MongoDB |
 | 14 | [14-redis-cache](./examples/14-redis-cache) | Cache-aside reads with Redis |
+| 15 | [15-devpanel](./examples/15-devpanel) | Real-time observability UI with the DevPanel addon |
 
 ---
 
@@ -85,6 +86,9 @@ Document CRUD using the [ss-keel-mongo](https://github.com/slice-soft/ss-keel-mo
 ### 14 — Redis Cache
 Cache-aside reads and invalidation using the [ss-keel-redis](https://github.com/slice-soft/ss-keel-redis) addon. The module receives `*ssredis.Client`, while the service depends on the generic `contracts.Cache` interface.
 
+### 15 — DevPanel
+Real-time observability UI powered by the [ss-keel-devpanel](https://github.com/slice-soft/ss-keel-devpanel) addon. Captures every HTTP request in a ring buffer, streams structured logs from `panel.Logger()`, and exposes config and route inspection — all in a browser UI at `/keel/panel`.
+
 ---
 
 ## How to Run an Example
@@ -110,6 +114,8 @@ The server starts on port **7331** by default.
 Open the interactive API docs at [http://localhost:7331/docs](http://localhost:7331/docs).
 
 > **Note:** Some examples (08-gorm-postgres, 12-oauth, 13-mongo, 14-redis-cache) require Docker or external services. See each example's README for details.
+>
+> **Config:** Every example uses `application.properties` + `config.MustLoadConfig` for typed configuration — no manual `os.Getenv` calls needed.
 
 ---
 

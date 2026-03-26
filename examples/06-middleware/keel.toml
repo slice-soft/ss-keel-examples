@@ -1,0 +1,10 @@
+[project]
+name    = "middleware-example"
+module  = "middleware-example"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/middleware-example ."
+test  = "go test ./..."

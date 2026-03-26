@@ -263,19 +263,22 @@ func (m *NotesModule) Register(app *core.App) {
 	}))
 }
 
+type AppConfig struct {
+	Name     string `keel:"app.name"`
+	Env      string `keel:"app.env"`
+	Port     int    `keel:"server.port"`
+	CacheTTL int    `keel:"cache.ttl-seconds"`
+}
+
 func main() {
-	port := config.GetEnvIntOrDefault("PORT", 7331)
-	env := config.GetEnvOrDefault("APP_ENV", "development")
-	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "redis-cache-example")
-	redisURL := config.GetEnvOrDefault("REDIS_URL", "redis://localhost:6379")
-	cacheTTL := time.Duration(config.GetEnvIntOrDefault("CACHE_TTL_SECONDS", 30)) * time.Second
+	cfg := config.MustLoadConfig[AppConfig]()
+	redisCfg := config.MustLoadConfig[ssredis.Config]()
 
-	log := logger.NewLogger(env == "production")
+	log := logger.NewLogger(cfg.Env == "production")
+	redisCfg.Logger = log
+	cacheTTL := time.Duration(cfg.CacheTTL) * time.Second
 
-	redisClient, err := ssredis.New(ssredis.Config{
-		URL:    redisURL,
-		Logger: log,
-	})
+	redisClient, err := ssredis.New(redisCfg)
 	if err != nil {
 		log.Error("failed to initialize redis: %v", err)
 		os.Exit(1)
@@ -283,9 +286,9 @@ func main() {
 	defer redisClient.Close()
 
 	app := core.New(core.KConfig{
-		ServiceName: serviceName,
-		Port:        port,
-		Env:         env,
+		ServiceName: cfg.Name,
+		Port:        cfg.Port,
+		Env:         cfg.Env,
 		Docs: core.DocsConfig{
 			Title:       "Redis Cache API",
 			Version:     "1.0.0",
@@ -299,7 +302,7 @@ func main() {
 	app.RegisterHealthChecker(ssredis.NewHealthChecker(redisClient))
 	app.Use(NewNotesModule(log, redisClient, NewNotesStore(), cacheTTL))
 
-	log.Info("starting %s on port %d (env=%s, cache_ttl=%s)", serviceName, port, env, cacheTTL)
+	log.Info("starting %s on port %d (env=%s, cache_ttl=%s)", cfg.Name, cfg.Port, cfg.Env, cacheTTL)
 
 	if err := app.Listen(); err != nil {
 		app.Logger().Error("server error: %v", err)

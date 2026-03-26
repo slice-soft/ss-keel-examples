@@ -1,0 +1,101 @@
+[project]
+name    = "oauth-example"
+module  = "oauth-example"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/oauth-example ."
+test  = "go test ./..."
+
+[[addons]]
+id           = "ss-keel-jwt"
+version      = "1.6.0"
+repo         = "github.com/slice-soft/ss-keel-jwt"
+capabilities = ["auth"]
+
+[[env]]
+key      = "JWT_SECRET"
+source   = "ss-keel-jwt"
+required = true
+secret   = true
+description = "Secret key used to sign and verify JWT tokens — use a long random string in production"
+
+[[addons]]
+id           = "ss-keel-oauth"
+version      = "1.9.0"
+repo         = "github.com/slice-soft/ss-keel-oauth"
+capabilities = ["auth"]
+
+[[env]]
+key      = "OAUTH_GOOGLE_CLIENT_ID"
+source   = "ss-keel-oauth"
+required = false
+description = "Google OAuth2 client ID (console.cloud.google.com → Credentials)"
+
+[[env]]
+key      = "OAUTH_GOOGLE_CLIENT_SECRET"
+source   = "ss-keel-oauth"
+required = false
+secret   = true
+description = "Google OAuth2 client secret"
+
+[[env]]
+key      = "OAUTH_GITHUB_CLIENT_ID"
+source   = "ss-keel-oauth"
+required = false
+description = "GitHub OAuth2 client ID (github.com/settings/developers)"
+
+[[env]]
+key      = "OAUTH_GITHUB_CLIENT_SECRET"
+source   = "ss-keel-oauth"
+required = false
+secret   = true
+description = "GitHub OAuth2 client secret"
+
+[[env]]
+key      = "OAUTH_GITLAB_CLIENT_ID"
+source   = "ss-keel-oauth"
+required = false
+description = "GitLab OAuth2 application ID (gitlab.com/-/user_settings/applications)"
+
+[[env]]
+key      = "OAUTH_GITLAB_CLIENT_SECRET"
+source   = "ss-keel-oauth"
+required = false
+secret   = true
+description = "GitLab OAuth2 client secret"
+
+[[env]]
+key      = "OAUTH_REDIRECT_BASE_URL"
+source   = "ss-keel-oauth"
+required = false
+default  = "http://localhost:7331"
+description = "Base URL used to build provider callback URLs. In production use your public domain (e.g. https://api.myapp.com)"
+
+[[env]]
+key      = "OAUTH_ROUTE_PREFIX"
+source   = "ss-keel-oauth"
+required = false
+default  = "/auth"
+description = "Route prefix used to register OAuth login and callback routes"
+
+[[env]]
+key      = "OAUTH_ENABLED_PROVIDERS"
+source   = "ss-keel-oauth"
+required = false
+description = "Optional comma-separated list of providers to enable (google,github,gitlab). When empty, providers with complete credentials are enabled automatically"
+
+[[env]]
+key      = "OAUTH_REDIRECT_ON_SUCCESS"
+source   = "ss-keel-oauth"
+required = false
+description = "Optional frontend URL used for browser redirect mode after the JWT is signed (for example https://app.myapp.com/auth/done). Leave empty to return JSON {\"token\":\"...\"}"
+
+[[env]]
+key      = "OAUTH_REDIRECT_TOKEN_PARAM"
+source   = "ss-keel-oauth"
+required = false
+default  = "token"
+description = "Query parameter name used when OAUTH_REDIRECT_ON_SUCCESS is enabled"

@@ -3,13 +3,14 @@ module gorm-postgres
 go 1.25.7
 
 require (
-	github.com/slice-soft/ss-keel-core v0.7.0
-	github.com/slice-soft/ss-keel-gorm v1.4.3
+	github.com/slice-soft/ss-keel-core v0.11.0
+	github.com/slice-soft/ss-keel-gorm v1.6.0
 	gorm.io/gorm v1.31.1
 )
 
 require (
 	filippo.io/edwards25519 v1.2.0 // indirect
+	github.com/BurntSushi/toml v1.6.0 // indirect
 	github.com/andybalholm/brotli v1.2.0 // indirect
 	github.com/clipperhouse/uax29/v2 v2.2.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.13 // indirect

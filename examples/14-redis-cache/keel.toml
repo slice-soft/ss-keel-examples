@@ -1,0 +1,31 @@
+[project]
+name    = "redis-cache-example"
+module  = "redis-cache-example"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/redis-cache-example ."
+test  = "go test ./..."
+
+[[addons]]
+id           = "ss-keel-redis"
+version      = "1.3.0"
+repo         = "github.com/slice-soft/ss-keel-redis"
+capabilities = ["cache"]
+resources    = ["redis"]
+
+[[env]]
+key      = "REDIS_URL"
+source   = "ss-keel-redis"
+required = false
+default  = "redis://localhost:6379"
+description = "Redis connection URL. Format: redis://[:password@]host[:port][/db-number]"
+
+[[env]]
+key      = "CACHE_TTL_SECONDS"
+source   = "project"
+required = false
+default  = "30"
+description = "Cache TTL in seconds for note entries."

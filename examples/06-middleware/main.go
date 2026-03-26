@@ -13,6 +13,14 @@ import (
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
+type AppConfig struct {
+	Name        string `keel:"app.name"`
+	Env         string `keel:"app.env"`
+	Port        int    `keel:"server.port"`
+	InternalKey string `keel:"middleware.internal-key"`
+	BlockedIPs  string `keel:"middleware.blocked-ips"`
+}
+
 // CorrelationID injects an X-Correlation-ID header into every response.
 // If the request already carries one, it is forwarded as-is.
 func CorrelationID() fiber.Handler {
@@ -68,11 +76,12 @@ func requireInternalKey(secret string) fiber.Handler {
 }
 
 func main() {
-	port := config.GetEnvIntOrDefault("PORT", 7331)
-	env := config.GetEnvOrDefault("APP_ENV", "development")
-	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "middleware-example")
-	internalKey := config.GetEnvOrDefault("INTERNAL_KEY", "dev-internal-key")
-	blockedIPsRaw := config.GetEnvOrDefault("BLOCKED_IPS", "")
+	cfg := config.MustLoadConfig[AppConfig]()
+	port := cfg.Port
+	env := cfg.Env
+	serviceName := cfg.Name
+	internalKey := cfg.InternalKey
+	blockedIPsRaw := cfg.BlockedIPs
 
 	// Parse blocked IPs from the environment (comma-separated).
 	var blockedIPs []string
