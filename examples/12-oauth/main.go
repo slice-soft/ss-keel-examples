@@ -224,7 +224,7 @@ func normalizeOAuthRoutePrefix(raw string) string {
 func normalizeOAuthRedirectBase(raw string) string {
 	trimmed := strings.TrimSpace(raw)
 	if trimmed == "" {
-		trimmed = "http://localhost:7331"
+		trimmed = "http://127.0.0.1:7331"
 	}
 	return strings.TrimRight(trimmed, "/")
 }

@@ -71,7 +71,7 @@ description = "GitLab OAuth2 client secret"
 key      = "OAUTH_REDIRECT_BASE_URL"
 source   = "ss-keel-oauth"
 required = false
-default  = "http://localhost:7331"
+default  = "http://127.0.0.1:7331"
 description = "Base URL used to build provider callback URLs. In production use your public domain (e.g. https://api.myapp.com)"
 
 [[env]]
