@@ -1,0 +1,25 @@
+@base = http://localhost:7331
+
+### Ping — confirm the service is up and see the panel path
+GET {{base}}/api/ping
+
+### List events — each call appears in the panel's Requests tab
+GET {{base}}/api/events
+
+### Create an event — also logged via panel.Logger(), visible in Logs tab
+POST {{base}}/api/events
+Content-Type: application/json
+
+{
+  "title": "My first panel event"
+}
+
+### Open the DevPanel in your browser:
+### http://localhost:7331/keel/panel
+###
+### Tabs available:
+###   /keel/panel/requests  — captured HTTP requests with latency
+###   /keel/panel/logs      — structured logs from panel.Logger()
+###   /keel/panel/routes    — all registered routes
+###   /keel/panel/addons    — registered Debuggable addons
+###   /keel/panel/config    — resolved application.properties values

@@ -10,6 +10,13 @@ import (
 	"github.com/slice-soft/ss-keel-jwt/jwt"
 )
 
+type AppConfig struct {
+	Name      string `keel:"app.name"`
+	Env       string `keel:"app.env"`
+	Port      int    `keel:"server.port"`
+	JWTSecret string `keel:"jwt.secret"`
+}
+
 // User is a static in-memory user for demo purposes.
 type User struct {
 	ID    string
@@ -54,10 +61,11 @@ func RequireRole(role string) fiber.Handler {
 }
 
 func main() {
-	port := config.GetEnvIntOrDefault("PORT", 7331)
-	env := config.GetEnvOrDefault("APP_ENV", "development")
-	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "jwt-auth")
-	jwtSecret := config.GetEnvOrDefault("JWT_SECRET", "change-me-in-production")
+	cfg := config.MustLoadConfig[AppConfig]()
+	port := cfg.Port
+	env := cfg.Env
+	serviceName := cfg.Name
+	jwtSecret := cfg.JWTSecret
 
 	log := logger.NewLogger(env == "production")
 

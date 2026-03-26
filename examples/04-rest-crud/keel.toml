@@ -1,0 +1,10 @@
+[project]
+name    = "rest-crud"
+module  = "rest-crud"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/rest-crud ."
+test  = "go test ./..."

@@ -54,20 +54,26 @@ func RequireRole(role string) fiber.Handler {
 	}
 }
 
-func main() {
-	port := config.GetEnvIntOrDefault("PORT", 7331)
-	env := config.GetEnvOrDefault("APP_ENV", "development")
-	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "jwt-addon")
-	jwtSecret := config.GetEnvOrDefault("JWT_SECRET", "change-me-in-production")
+type AppConfig struct {
+	Name        string `keel:"app.name"`
+	Env         string `keel:"app.env"`
+	Port        int    `keel:"server.port"`
+	JWTSecret   string `keel:"jwt.secret"`
+	JWTIssuer   string `keel:"jwt.issuer"`
+	JWTTokenTTL uint   `keel:"jwt.token-ttl-hours"`
+}
 
-	log := logger.NewLogger(env == "production")
+func main() {
+	cfg := config.MustLoadConfig[AppConfig]()
+
+	log := logger.NewLogger(cfg.Env == "production")
 
 	// Initialize the ss-keel-jwt addon.
 	// Run:  keel add jwt
 	jwtProvider, err := jwt.New(jwt.Config{
-		SecretKey:     jwtSecret,
-		Issuer:        serviceName,
-		TokenTTLHours: 24,
+		SecretKey:     cfg.JWTSecret,
+		Issuer:        cfg.JWTIssuer,
+		TokenTTLHours: cfg.JWTTokenTTL,
 		Logger:        log,
 	})
 	if err != nil {
@@ -75,9 +81,9 @@ func main() {
 	}
 
 	app := core.New(core.KConfig{
-		ServiceName: serviceName,
-		Port:        port,
-		Env:         env,
+		ServiceName: cfg.Name,
+		Port:        cfg.Port,
+		Env:         cfg.Env,
 		Docs: core.DocsConfig{
 			Title:       "JWT Addon API",
 			Version:     "1.0.0",
@@ -170,7 +176,7 @@ func main() {
 		}
 	}))
 
-	log.Info("starting %s on port %d (env=%s)", serviceName, port, env)
+	log.Info("starting %s on port %d (env=%s)", cfg.Name, cfg.Port, cfg.Env)
 
 	if err := app.Listen(); err != nil {
 		app.Logger().Error("server error: %v", err)

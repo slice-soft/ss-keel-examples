@@ -12,12 +12,21 @@ import (
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
+type AppConfig struct {
+	Name            string `keel:"app.name"`
+	Env             string `keel:"app.env"`
+	Port            int    `keel:"server.port"`
+	RateLimitMax    int    `keel:"ratelimit.max"`
+	RateLimitWindow string `keel:"ratelimit.window"`
+}
+
 func main() {
-	port := config.GetEnvIntOrDefault("PORT", 7331)
-	env := config.GetEnvOrDefault("APP_ENV", "development")
-	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "addon-example")
-	rateLimitMax := config.GetEnvIntOrDefault("RATE_LIMIT_MAX", 10)
-	rateLimitWindowStr := config.GetEnvOrDefault("RATE_LIMIT_WINDOW", "1m")
+	cfg := config.MustLoadConfig[AppConfig]()
+	port := cfg.Port
+	env := cfg.Env
+	serviceName := cfg.Name
+	rateLimitMax := cfg.RateLimitMax
+	rateLimitWindowStr := cfg.RateLimitWindow
 
 	rateWindow, err := time.ParseDuration(rateLimitWindowStr)
 	if err != nil {

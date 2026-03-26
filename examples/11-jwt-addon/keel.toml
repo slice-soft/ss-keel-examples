@@ -1,0 +1,36 @@
+[project]
+name    = "jwt-addon"
+module  = "jwt-addon"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/jwt-addon ."
+test  = "go test ./..."
+
+[[addons]]
+id           = "ss-keel-jwt"
+version      = "1.6.0"
+repo         = "github.com/slice-soft/ss-keel-jwt"
+capabilities = ["auth"]
+
+[[env]]
+key      = "JWT_SECRET"
+source   = "ss-keel-jwt"
+required = true
+secret   = true
+description = "Secret key used to sign and verify JWT tokens — use a long random string in production"
+
+[[env]]
+key      = "JWT_ISSUER"
+source   = "ss-keel-jwt"
+required = false
+description = "Token issuer claim (iss). Defaults to SERVICE_NAME when empty"
+
+[[env]]
+key      = "JWT_TOKEN_TTL_HOURS"
+source   = "ss-keel-jwt"
+required = false
+default  = "24"
+description = "Token time-to-live in hours (default 24)"

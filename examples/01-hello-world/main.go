@@ -8,10 +8,17 @@ import (
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
+type AppConfig struct {
+	Name string `keel:"app.name"`
+	Env  string `keel:"app.env"`
+	Port int    `keel:"server.port"`
+}
+
 func main() {
-	port := config.GetEnvIntOrDefault("PORT", 7331)
-	env := config.GetEnvOrDefault("APP_ENV", "development")
-	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "hello-world")
+	cfg := config.MustLoadConfig[AppConfig]()
+	port := cfg.Port
+	env := cfg.Env
+	serviceName := cfg.Name
 
 	log := logger.NewLogger(env == "production")
 

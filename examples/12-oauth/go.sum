@@ -1,5 +1,7 @@
 cloud.google.com/go/compute/metadata v0.3.0 h1:Tz+eQXMEqDIKRsmY3cHTL6FVaynIjX2QxYC4trgAKZc=
 cloud.google.com/go/compute/metadata v0.3.0/go.mod h1:zFmK7XCadkQkj6TtorcaGlCW1hT1fIilQDwofLpJ20k=
+github.com/BurntSushi/toml v1.6.0 h1:dRaEfpa2VI55EwlIW72hMRHdWouJeRF7TPYhI+AUQjk=
+github.com/BurntSushi/toml v1.6.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
 github.com/andybalholm/brotli v1.0.5 h1:8uQZIdzKmjc/iuPu7O2ioW48L81FgatrcpfFmiq/cCs=
 github.com/andybalholm/brotli v1.0.5/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -38,12 +40,12 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rivo/uniseg v0.2.0 h1:S1pD9weZBuJdFmowNwbpi7BJ8TNftyUImj/0WQi72jY=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
-github.com/slice-soft/ss-keel-core v0.7.0 h1:mEOADYq5gMamb2n514odXbYY9KpgWNn4GdGUPDBN6ME=
-github.com/slice-soft/ss-keel-core v0.7.0/go.mod h1:FN0PK4u75XwLAyamy22Fz0qNYS9nRKTOWxtvpY7ult8=
-github.com/slice-soft/ss-keel-jwt v1.4.0 h1:13/40EcNipYfh1KPQY5E/hMgsbJ8dFiff9SNWFFcV8k=
-github.com/slice-soft/ss-keel-jwt v1.4.0/go.mod h1:q/3nkx/2gVpd6RlF0cy54e7Or8B2t7T14X+Lx2uhr3w=
-github.com/slice-soft/ss-keel-oauth v1.6.0 h1:IIE9u/9fbc6jszxBWgGdrjJaWnMuikPFAOnf9WSb2mA=
-github.com/slice-soft/ss-keel-oauth v1.6.0/go.mod h1:sK3Kkp1MeUYQwA5nWddF/icLQ1jMQVoX1e8nP6HWcMI=
+github.com/slice-soft/ss-keel-core v0.11.0 h1:RL/PJQbjRnfQlRBAba3sjiDNJ3hZ4jSz4IjKM4O3FfQ=
+github.com/slice-soft/ss-keel-core v0.11.0/go.mod h1:v9VPUAoEukLmvi5cnGZcqnJjKTG0I/mn4GDmT8wJ+UQ=
+github.com/slice-soft/ss-keel-jwt v1.6.0 h1:+Ke40O2tU/suI6olw7MBHpT+dI0X1ZtP+PDwCSaEkrg=
+github.com/slice-soft/ss-keel-jwt v1.6.0/go.mod h1:Pa4Fpk/0yxJB4nMZTyLS1sxEBl2x6ZvCRm9oQyZvraA=
+github.com/slice-soft/ss-keel-oauth v1.9.0 h1:+BhGUFI95t+UA5JzGtxRiUoCvB65QKH1Jl/ukFZo+eQ=
+github.com/slice-soft/ss-keel-oauth v1.9.0/go.mod h1:BV0B0iFINB+o759Vh783ejCU2Id/DlPT+QJkorcGiVw=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=

@@ -195,6 +195,21 @@ You will learn:
 
 ---
 
+### 15 — DevPanel
+**Goal:** Add real-time observability to a running Keel service.
+
+You will learn:
+- Installing the addon with `keel add devpanel`
+- `devpanel.New(devpanel.Config{})` — panel initialization
+- `panel.RequestMiddleware()` — capturing every HTTP request in a ring buffer
+- `panel.GlobalGuard()` — blocking panel routes when `Enabled=false`
+- `panel.Mount(fiberApp)` — registering the browser UI at `/keel/panel`
+- `panel.Logger()` — emitting structured log entries visible in the Logs tab
+- Protecting the panel with an optional bearer token via `KEEL_PANEL_SECRET`
+- Using `config.MustLoadConfig` + `application.properties` for typed config without helpers
+
+---
+
 ## What Comes Next
 
 After completing all examples:
@@ -203,5 +218,6 @@ After completing all examples:
 2. Add a database: `keel add gorm` or `keel add mongo`
 3. Add authentication: `keel add jwt` or `keel add oauth`
 4. Add caching when needed: `keel add redis`
-5. Read the [official docs](https://docs.keel-go.dev)
-6. Explore [ss-keel-core](https://github.com/slice-soft/ss-keel-core) source code
+5. Add observability: `keel add devpanel`
+6. Read the [official docs](https://docs.keel-go.dev)
+7. Explore [ss-keel-core](https://github.com/slice-soft/ss-keel-core) source code

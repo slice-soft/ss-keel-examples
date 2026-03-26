@@ -33,22 +33,23 @@ type UpdateNoteRequest struct {
 	Body  string `json:"body"  validate:"omitempty,max=5000"`
 }
 
-func main() {
-	port := config.GetEnvIntOrDefault("PORT", 7331)
-	env := config.GetEnvOrDefault("APP_ENV", "development")
-	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "mongo-example")
-	mongoURI := config.GetEnvOrDefault("MONGO_URI", "mongodb://localhost:27017")
-	mongoDatabase := config.GetEnvOrDefault("MONGO_DATABASE", "keelexamples")
+type AppConfig struct {
+	Name string `keel:"app.name"`
+	Env  string `keel:"app.env"`
+	Port int    `keel:"server.port"`
+}
 
-	log := logger.NewLogger(env == "production")
+func main() {
+	cfg := config.MustLoadConfig[AppConfig]()
+	mongoCfg := config.MustLoadConfig[mongo.Config]()
+
+	log := logger.NewLogger(cfg.Env == "production")
+	mongoCfg.Logger = log
+	mongoCfg.AppName = cfg.Name
 
 	// Connect to MongoDB using the ss-keel-mongo addon.
 	// Run:  keel add mongo
-	client, err := mongo.New(mongo.Config{
-		URI:      mongoURI,
-		Database: mongoDatabase,
-		Logger:   log,
-	})
+	client, err := mongo.New(mongoCfg)
 	if err != nil {
 		log.Error("failed to connect to MongoDB: %v", err)
 		os.Exit(1)
@@ -60,9 +61,9 @@ func main() {
 	repo := mongo.NewRepository[Note, string](client, "notes")
 
 	app := core.New(core.KConfig{
-		ServiceName: serviceName,
-		Port:        port,
-		Env:         env,
+		ServiceName: cfg.Name,
+		Port:        cfg.Port,
+		Env:         cfg.Env,
 		Docs: core.DocsConfig{
 			Title:       "MongoDB API",
 			Version:     "1.0.0",
@@ -169,7 +170,7 @@ func main() {
 		}
 	}))
 
-	log.Info("starting %s on port %d (env=%s)", serviceName, port, env)
+	log.Info("starting %s on port %d (env=%s)", cfg.Name, cfg.Port, cfg.Env)
 
 	if err := app.Listen(); err != nil {
 		app.Logger().Error("server error: %v", err)

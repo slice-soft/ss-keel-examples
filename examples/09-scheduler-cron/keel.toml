@@ -1,0 +1,10 @@
+[project]
+name    = "scheduler-cron"
+module  = "scheduler-cron"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/scheduler-cron ."
+test  = "go test ./..."

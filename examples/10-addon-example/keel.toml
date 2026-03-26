@@ -1,0 +1,10 @@
+[project]
+name    = "addon-example"
+module  = "addon-example"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/addon-example ."
+test  = "go test ./..."

@@ -8,14 +8,25 @@ import (
 	"github.com/slice-soft/ss-keel-core/logger"
 )
 
+type AppConfig struct {
+	Name        string `keel:"app.name"`
+	Env         string `keel:"app.env"`
+	Port        int    `keel:"server.port"`
+	APIVersion  string `keel:"app.api-version"`
+	LogLevel    string `keel:"app.log-level"`
+	MaxPageSize int    `keel:"app.max-page-size"`
+	FeatureFlag bool   `keel:"app.feature-flag"`
+}
+
 func main() {
-	port := config.GetEnvIntOrDefault("PORT", 7331)
-	env := config.GetEnvOrDefault("APP_ENV", "development")
-	serviceName := config.GetEnvOrDefault("SERVICE_NAME", "config-env")
-	apiVersion := config.GetEnvOrDefault("API_VERSION", "v1")
-	logLevel := config.GetEnvOrDefault("LOG_LEVEL", "info")
-	maxPageSize := config.GetEnvIntOrDefault("MAX_PAGE_SIZE", 50)
-	featureFlag := config.GetEnvBoolOrDefault("FEATURE_FLAG", false)
+	cfg := config.MustLoadConfig[AppConfig]()
+	port := cfg.Port
+	env := cfg.Env
+	serviceName := cfg.Name
+	apiVersion := cfg.APIVersion
+	logLevel := cfg.LogLevel
+	maxPageSize := cfg.MaxPageSize
+	featureFlag := cfg.FeatureFlag
 
 	log := logger.NewLogger(env == "production")
 	log.Info("loaded config: env=%s api_version=%s log_level=%s", env, apiVersion, logLevel)
