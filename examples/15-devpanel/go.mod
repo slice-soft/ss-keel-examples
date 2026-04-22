@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/slice-soft/ss-keel-core v0.11.0
-	github.com/slice-soft/ss-keel-devpanel v1.9.0
+	github.com/slice-soft/ss-keel-devpanel v1.10.0
 )
 
 require (

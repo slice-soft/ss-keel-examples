@@ -42,6 +42,14 @@ If you are new to Keel, work through the examples in order:
 
 ---
 
+## Project structure note
+
+Examples 01–10 use the module pattern from `ss-keel-core` directly with a flat `main.go` at the repo root. Examples 11–15 (addon-based) follow the same flat layout intentionally, so each example stays self-contained and runnable without the Keel CLI scaffold.
+
+Projects created with `keel new` use a `cmd/main.go` layout with `application.properties` and `.env`/`.env.example`. When comparing example code against a generated project, translate root-level `main.go` to `cmd/main.go`.
+
+---
+
 ## Examples
 
 ### 01 — Hello World
