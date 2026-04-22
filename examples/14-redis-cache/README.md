@@ -1,5 +1,7 @@
 # 14 — Redis Cache
 
+> **Note:** This example uses a compact flat layout (`main.go` at the root) to keep all the relevant code in one place and let you focus on the API surface — no CLI scaffolding required. Projects created with `keel new` + `keel add redis` place the entry point at `cmd/main.go` and generate a dedicated `cmd/setup_redis.go` provider file.
+
 Cache-aside notes API using [ss-keel-redis](https://github.com/slice-soft/ss-keel-redis).
 
 ## What This Demonstrates

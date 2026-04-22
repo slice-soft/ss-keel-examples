@@ -1,5 +1,7 @@
 # 15 — DevPanel
 
+> **Note:** This example uses a compact flat layout (`main.go` at the root) to keep all the relevant code in one place and let you focus on the API surface — no CLI scaffolding required. Projects created with `keel new` + `keel add devpanel` place the entry point at `cmd/main.go` and generate a dedicated `cmd/setup_devpanel.go` provider file.
+
 Real-time observability UI for your Keel application, powered by the [ss-keel-devpanel](https://github.com/slice-soft/ss-keel-devpanel) addon.
 
 ## What this example demonstrates
