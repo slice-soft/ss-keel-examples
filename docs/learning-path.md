@@ -138,7 +138,7 @@ You will learn:
 
 ---
 
-## Phase 5 — Addon Ecosystem (examples 11–14)
+## Phase 5 — Addon Ecosystem (examples 11–16)
 
 First-class addons for authentication and persistence.
 
@@ -210,6 +210,23 @@ You will learn:
 
 ---
 
+### 16 — OpenTelemetry
+**Goal:** Add distributed tracing and metrics to a Keel service via OTLP.
+
+You will learn:
+- Installing the addon with `keel add otel`
+- The `setupOtel` provider pattern from `cmd/setup_otel.go`
+- `ssotel.New(ssotel.Config{})` — SDK initialization; safe no-op when `OTEL_ENABLED=false`
+- `app.SetTracer(provider)` — wiring the provider into the Keel tracer slot
+- `provider.Middleware()` — automatic HTTP spans for every Fiber request
+- `app.Tracer().Start(ctx, "OperationName")` — manual child spans
+- `span.SetAttribute("key", value)` — enriching spans with structured data
+- `span.RecordError(err)` — marking spans as failed
+- `app.OnShutdown(provider.Shutdown)` — flushing telemetry on graceful shutdown
+- Exporting to Jaeger via OTLP HTTP (`http://localhost:4318`)
+
+---
+
 ## What Comes Next
 
 After completing all examples:
@@ -218,6 +235,7 @@ After completing all examples:
 2. Add a database: `keel add gorm` or `keel add mongo`
 3. Add authentication: `keel add jwt` or `keel add oauth`
 4. Add caching when needed: `keel add redis`
-5. Add observability: `keel add devpanel`
-6. Read the [official docs](https://docs.keel-go.dev)
-7. Explore [ss-keel-core](https://github.com/slice-soft/ss-keel-core) source code
+5. Add local observability: `keel add devpanel`
+6. Add distributed tracing: `keel add otel`
+7. Read the [official docs](https://docs.keel-go.dev)
+8. Explore [ss-keel-core](https://github.com/slice-soft/ss-keel-core) source code

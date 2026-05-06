@@ -39,12 +39,13 @@ If you are new to Keel, work through the examples in order:
 | 13 | [13-mongo](./examples/13-mongo) | Document CRUD with MongoDB |
 | 14 | [14-redis-cache](./examples/14-redis-cache) | Cache-aside reads with Redis |
 | 15 | [15-devpanel](./examples/15-devpanel) | Real-time observability UI with the DevPanel addon |
+| 16 | [16-otel](./examples/16-otel) | Distributed tracing with the OpenTelemetry addon |
 
 ---
 
 ## Project structure note
 
-Examples 01–10 use the module pattern from `ss-keel-core` directly with a flat `main.go` at the repo root. Examples 11–15 (addon-based) follow the same flat layout intentionally, so each example stays self-contained and runnable without the Keel CLI scaffold.
+Examples 01–10 use the module pattern from `ss-keel-core` directly with a flat `main.go` at the repo root. Examples 11–16 (addon-based) follow the same flat layout intentionally, so each example stays self-contained and runnable without the Keel CLI scaffold.
 
 Projects created with `keel new` use a `cmd/main.go` layout with `application.properties` and `.env`/`.env.example`. When comparing example code against a generated project, translate root-level `main.go` to `cmd/main.go`.
 
@@ -97,6 +98,9 @@ Cache-aside reads and invalidation using the [ss-keel-redis](https://github.com/
 ### 15 — DevPanel
 Real-time observability UI powered by the [ss-keel-devpanel](https://github.com/slice-soft/ss-keel-devpanel) addon. Captures every HTTP request in a ring buffer, streams structured logs from `panel.Logger()`, and exposes config and route inspection — all in a browser UI at `/keel/panel`.
 
+### 16 — OpenTelemetry
+Distributed tracing and metrics via the [ss-keel-otel](https://github.com/slice-soft/ss-keel-otel) addon. Shows automatic HTTP spans from the OTel middleware, manual child spans with `app.Tracer().Start()`, span attributes, and error recording — with OTLP export to Jaeger.
+
 ---
 
 ## How to Run an Example
@@ -121,7 +125,7 @@ The server starts on port **7331** by default.
 
 Open the interactive API docs at [http://localhost:7331/docs](http://localhost:7331/docs).
 
-> **Note:** Some examples (08-gorm-postgres, 12-oauth, 13-mongo, 14-redis-cache) require Docker or external services. See each example's README for details.
+> **Note:** Some examples (08-gorm-postgres, 12-oauth, 13-mongo, 14-redis-cache, 16-otel) require Docker or external services. See each example's README for details.
 >
 > **Config:** Every example uses `application.properties` + `config.MustLoadConfig` for typed configuration — no manual `os.Getenv` calls needed.
 

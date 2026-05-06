@@ -1,0 +1,22 @@
+@baseUrl = http://localhost:7331
+
+### List all orders (auto HTTP span from OTel middleware)
+GET {{baseUrl}}/api/orders
+
+### Get order by ID — creates a manual child span (OrderStore.FindByID)
+GET {{baseUrl}}/api/orders/order-1
+
+### Get non-existent order — child span records the error
+GET {{baseUrl}}/api/orders/order-999
+
+### Create a new order — manual child span (OrderStore.Save) with attributes
+POST {{baseUrl}}/api/orders
+Content-Type: application/json
+
+{
+  "product": "OTel Coffee Mug",
+  "qty": 3
+}
+
+### Health check
+GET {{baseUrl}}/health
