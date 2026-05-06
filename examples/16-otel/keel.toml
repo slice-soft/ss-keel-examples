@@ -1,0 +1,70 @@
+[project]
+name    = "otel-example"
+module  = "otel-example"
+version = "1.0.0"
+config  = "application.properties"
+
+[scripts]
+dev   = "go run ."
+build = "go build -o bin/otel-example ."
+test  = "go test ./..."
+
+[[addons]]
+id           = "ss-keel-otel"
+version      = "1.0.0"
+repo         = "github.com/slice-soft/ss-keel-otel"
+capabilities = ["observability"]
+
+[[env]]
+key         = "OTEL_ENABLED"
+source      = "ss-keel-otel"
+required    = false
+default     = "false"
+description = "Enable OpenTelemetry. Set to true in environments where you want telemetry data."
+
+[[env]]
+key         = "OTEL_SERVICE_NAME"
+source      = "ss-keel-otel"
+required    = true
+description = "Logical service name. Appears in traces, metrics, and dashboards."
+
+[[env]]
+key         = "OTEL_SERVICE_VERSION"
+source      = "ss-keel-otel"
+required    = false
+default     = "0.0.0"
+description = "Service version reported as a resource attribute."
+
+[[env]]
+key         = "OTEL_ENVIRONMENT"
+source      = "ss-keel-otel"
+required    = false
+default     = "development"
+description = "Deployment environment (e.g. production, staging)."
+
+[[env]]
+key         = "OTEL_EXPORTER_OTLP_ENDPOINT"
+source      = "ss-keel-otel"
+required    = false
+default     = "http://localhost:4318"
+description = "OTLP collector endpoint."
+
+[[env]]
+key         = "OTEL_EXPORTER_OTLP_PROTOCOL"
+source      = "ss-keel-otel"
+required    = false
+default     = "http/protobuf"
+description = "OTLP transport: http/protobuf (default) or grpc."
+
+[[env]]
+key         = "OTEL_TRACES_SAMPLER"
+source      = "ss-keel-otel"
+required    = false
+default     = "parentbased_always_on"
+description = "Trace sampler strategy."
+
+[[env]]
+key         = "OTEL_TRACES_SAMPLER_ARG"
+source      = "ss-keel-otel"
+required    = false
+description = "Sampler ratio for ratio-based samplers (0.0–1.0)."

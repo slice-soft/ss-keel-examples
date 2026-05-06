@@ -1,10 +1,10 @@
 module redis-cache-example
 
-go 1.25.0
+go 1.25.7
 
 require (
 	github.com/slice-soft/ss-keel-core v0.11.0
-	github.com/slice-soft/ss-keel-redis v1.3.1
+	github.com/slice-soft/ss-keel-redis v1.3.2
 )
 
 require (
