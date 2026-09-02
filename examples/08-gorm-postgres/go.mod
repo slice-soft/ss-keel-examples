@@ -3,8 +3,8 @@ module gorm-postgres
 go 1.25.7
 
 require (
-	github.com/slice-soft/ss-keel-core v0.11.0
-	github.com/slice-soft/ss-keel-gorm v1.7.0
+	github.com/slice-soft/ss-keel-core v0.12.0
+	github.com/slice-soft/ss-keel-gorm v1.7.1
 	gorm.io/gorm v1.31.1
 )
 

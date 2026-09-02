@@ -1,0 +1,40 @@
+name: CI
+
+# Each example is an independent Go module, and nothing was building them: an
+# example could stop compiling and no one would know until a reader tried it.
+# This builds and vets all of them on every change.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-examples:
+    name: build examples
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+
+      - name: Build and vet every example
+        run: |
+          set -euo pipefail
+          failed=()
+          for example in examples/*/; do
+            [[ -f "${example}go.mod" ]] || continue
+            name=$(basename "$example")
+            echo "── $name"
+            if ! (cd "$example" && go build ./... && go vet ./...); then
+              failed+=("$name")
+            fi
+          done
+          if [[ ${#failed[@]} -gt 0 ]]; then
+            printf 'Failing examples: %s\n' "${failed[*]}" >&2
+            exit 1
+          fi
+          echo "All examples build."
