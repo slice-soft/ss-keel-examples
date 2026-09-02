@@ -2,7 +2,7 @@ module validation-example
 
 go 1.25
 
-require github.com/slice-soft/ss-keel-core v0.11.0
+require github.com/slice-soft/ss-keel-core v0.12.0
 
 require (
 	github.com/BurntSushi/toml v1.6.0 // indirect

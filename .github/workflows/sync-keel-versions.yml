@@ -1,0 +1,35 @@
+name: Sync Keel versions
+
+# The examples drifted for months behind the released addons, so a reader
+# copying from one was copying an old API. This checks weekly, bumps every
+# example to the latest release, and opens a PR only when they all still build.
+#
+# Requires EXAMPLES_SYNC_TOKEN: a PAT with Contents and Pull requests
+# (read/write) on this repository.
+
+on:
+  schedule:
+    # Mondays at 06:30 UTC, after the docs sync.
+    - cron: "30 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    uses: slice-soft/ss-pipeline/.github/workflows/run-script-and-pr.yml@v0
+    secrets:
+      token: ${{ secrets.EXAMPLES_SYNC_TOKEN }}
+    with:
+      script-path: scripts/sync-keel-versions.sh
+      commit-message: "chore: bump examples to the latest Keel releases"
+      pr-title: "chore: bump examples to the latest Keel releases"
+      pr-body: |
+        Automated by `.github/workflows/sync-keel-versions.yml`.
+
+        Bumps every example to the latest published `ss-keel-*` releases. The
+        script builds and vets each example against the new versions and fails
+        without opening a PR when any of them breaks, so this PR only exists
+        because all 16 examples still compile.
+      branch: chore/sync-keel-versions
+      add-paths: |
+        examples/*/go.mod
+        examples/*/go.sum

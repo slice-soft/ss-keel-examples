@@ -3,8 +3,8 @@ module otel-example
 go 1.25.0
 
 require (
-	github.com/slice-soft/ss-keel-core v0.11.0
-	github.com/slice-soft/ss-keel-otel v1.0.0
+	github.com/slice-soft/ss-keel-core v0.12.0
+	github.com/slice-soft/ss-keel-otel v1.1.2
 )
 
 require (

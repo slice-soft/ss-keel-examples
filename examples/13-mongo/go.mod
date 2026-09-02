@@ -3,8 +3,8 @@ module mongo-example
 go 1.25.0
 
 require (
-	github.com/slice-soft/ss-keel-core v0.11.0
-	github.com/slice-soft/ss-keel-mongo v1.7.0
+	github.com/slice-soft/ss-keel-core v0.12.0
+	github.com/slice-soft/ss-keel-mongo v1.7.1
 )
 
 require (
